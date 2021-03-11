@@ -60,20 +60,20 @@ public class MainRoute extends RouteBuilder {
                 .when().simple("${header.status} == 'NO AUTORIZADO'")
                 .setBody(simple("${header.appliedInvoice}"))
                 .toD(format(
-                        "file:%s%s${header.folderName}?fileName=${header.accessKey}.xml",
+                        "file:%s%s${header.folderName}?fileName=${header.fileName}.xml",
                         rootFolder,
                         notAuthoraizedFolder
                 ))
                 .when().simple("${header.status} == 'AUTORIZADO'")
                 .setBody(simple("${header.appliedInvoice}"))
                 .toD(format(
-                        "file:%s%s${header.folderName}?fileName=${header.accessKey}.xml",
+                        "file:%s%s${header.folderName}?fileName=${header.fileName}.xml",
                         rootFolder,
                         appliedFolder
                 ))
                 .setBody(simple("${header.ride}"))
                 .toD(format(
-                        "file:%s%s${header.folderName}?fileName=${header.accessKey}.pdf",
+                        "file:%s%s${header.folderName}?fileName=${header.fileName}.pdf",
                         rootFolder,
                         appliedFolder
                 ))

@@ -2,6 +2,7 @@ package ec.veronica.job.processor;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
+import ec.veronica.job.commons.DocumentEnum;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -22,7 +23,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 
 import static ec.veronica.job.commons.XmlUtils.xpath;
 import static java.lang.String.format;
@@ -52,9 +55,13 @@ public class FileProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
         String xml = exchange.getIn().getBody(String.class);
 
+        String estab = xpath(xml, "//estab");
+        String ptoEmision = xpath(xml, "//ptoEmi");
         String docType = xpath(xml, "//codDoc");
         String docNumber = xpath(xml, "//secuencial");
         String customerNumber = xpath(xml, getCustomerNumberXPath(docType));
+        Optional<DocumentEnum> optionalDocumentEnum = DocumentEnum.get(docType);
+        DocumentEnum documentEnum = optionalDocumentEnum.get();
 
         LOGGER.debug("Se inicia envío de comprobante {}", docNumber);
 
@@ -100,7 +107,11 @@ public class FileProcessor implements Processor {
         }
 
         exchange.getIn().setHeader("status", status);
+
+        StringBuilder folderName = new StringBuilder();
+
         exchange.getIn().setHeader("folderName", customerNumber);
+        exchange.getIn().setHeader("fileName", format("%s-%s-%s-%s", documentEnum.getNombre(), estab, ptoEmision, docNumber));
     }
 
     private byte[] getReceiptFile(String accessKey, String format) {
