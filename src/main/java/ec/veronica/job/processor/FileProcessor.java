@@ -23,8 +23,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import static ec.veronica.job.commons.XmlUtils.xpath;
@@ -53,7 +53,8 @@ public class FileProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        String xml = exchange.getIn().getBody(String.class);
+        byte[] payload = exchange.getIn().getBody(String.class).getBytes(StandardCharsets.UTF_8);
+        String xml = new String(payload);
 
         String estab = xpath(xml, "//estab");
         String ptoEmision = xpath(xml, "//ptoEmi");
@@ -67,7 +68,7 @@ public class FileProcessor implements Processor {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_ATOM_XML);
-        HttpEntity<String> entity = new HttpEntity<>(xml, headers);
+        HttpEntity<byte[]> entity = new HttpEntity<>(payload, headers);
         String responseBody = "";
         try {
             ResponseEntity<String> result = auth2RestTemplate.postForEntity(format(veronicaApiUrl, "sri"), entity, String.class);

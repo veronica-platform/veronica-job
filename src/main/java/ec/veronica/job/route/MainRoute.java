@@ -44,7 +44,7 @@ public class MainRoute extends RouteBuilder {
                 .handled(true)
                 .process(httpExceptionProcessor);*/
 
-        inboxFolder = format("file:%s%s?delete=true", rootFolder, inboxFolder);
+        inboxFolder = format("file:%s%s?delete=true&charset=utf-8", rootFolder, inboxFolder);
         rejectedFolder = format("file:%s%s", rootFolder, rejectedFolder);
         pendingFolder = format("file:%s%s", rootFolder, pendingFolder);
         withErrorsFolder = format("file:%s%s", rootFolder, withErrorsFolder);
