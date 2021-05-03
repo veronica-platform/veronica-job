@@ -5,6 +5,8 @@ import ec.veronica.job.service.RouterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,12 @@ public class RouterController {
     @PostMapping(value = "/routes")
     public ResponseEntity<RouterDto> addRoute(@Valid @RequestBody RouterDto routerDto) {
         return new ResponseEntity<>(routerService.create(routerDto), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(value = "/routes/{route-id}")
+    public ResponseEntity<RouterDto> deleteRoute(@PathVariable("route-id") String routeId) {
+        routerService.remove(routeId);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
 }

@@ -6,4 +6,6 @@ public interface RouterService {
 
     RouterDto create(RouterDto routerDto);
 
+    void remove(String routeId);
+
 }
