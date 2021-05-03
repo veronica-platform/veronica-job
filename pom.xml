@@ -16,6 +16,7 @@
         <spring-boot.version>2.1.5.RELEASE</spring-boot.version>
         <jackson.version>2.11.1</jackson.version>
         <camel.version>2.25.2</camel.version>
+        <veronica-common.version>1.1.5-SNAPSHOT</veronica-common.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -40,6 +41,16 @@
     </dependencyManagement>
     <dependencies>
         <!-- Spring Boot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-spring-boot-starter</artifactId>
@@ -99,6 +110,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.rolandopalermo.facturacion.ec</groupId>
+            <artifactId>veronica-common</artifactId>
+            <version>${veronica-common.version}</version>
+        </dependency>
+
         <!-- asynchronous loggers -->
         <dependency>
             <groupId>com.lmax</groupId>
