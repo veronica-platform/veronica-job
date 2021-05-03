@@ -8,6 +8,7 @@ bin/
 *.ipr
 *.iml
 .idea
+data/
 out/
 .DS_Store
 /bootstrap

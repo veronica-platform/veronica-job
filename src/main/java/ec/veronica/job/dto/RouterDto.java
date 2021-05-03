@@ -19,7 +19,7 @@ public class RouterDto {
     private String supplierNumber;
     @NotEmpty
     private String rootFolder;
-    private boolean isEnabled;
+    private boolean enabled;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public String getRouteId() {
@@ -31,7 +31,7 @@ public class RouterDto {
         return "RouterDto{" +
                 "supplierNumber='" + supplierNumber + '\'' +
                 ", rootFolder='" + rootFolder + '\'' +
-                ", isEnabled=" + isEnabled +
+                ", enabled=" + enabled +
                 '}';
     }
 
