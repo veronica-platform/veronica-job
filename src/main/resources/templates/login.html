@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Verónica Job</title>
+
+    <!-- Bootstrap CSS
+    <link href="../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap.css}">-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="../static/css/signin.css" rel="stylesheet" th:href="@{/css/signin.css}">
+</head>
+<body>
+<div class="login-form">
+    <form th:action="@{/login}" method="post">
+        <h2 class="text-center">Log in</h2>
+        <div th:if="${param.error}">
+            <div class="alert alert-danger">
+                Invalid username and password.
+            </div>
+        </div>
+        <div th:if="${param.logout}">
+            <div class="alert alert-info">
+                You have been logged out.
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" name="username" id="username" placeholder="Usuario"
+                   required="required">
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" name="password" id="password" placeholder="Contraseña"
+                   required="required">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Log in</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>
