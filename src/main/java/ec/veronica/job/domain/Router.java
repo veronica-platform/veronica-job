@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.math.BigInteger;
 
 @Data
 @Entity
@@ -24,5 +25,8 @@ public class Router {
 
     @Column(name = "enabled")
     private boolean enabled;
+
+    @Column(name = "receipts_count")
+    private BigInteger receiptsCount;
 
 }

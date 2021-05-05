@@ -73,6 +73,7 @@ public class RouterServiceImpl implements RouterService {
         router.setId(dto.getRouteId());
         router.setRootFolder(dto.getRootFolder());
         router.setSupplierNumber(dto.getSupplierNumber());
+        router.setReceiptsCount(dto.getReceiptsCount());
         return router;
     }
 
@@ -82,6 +83,7 @@ public class RouterServiceImpl implements RouterService {
         router.setRouteId(domain.getId());
         router.setRootFolder(domain.getRootFolder());
         router.setSupplierNumber(domain.getSupplierNumber());
+        router.setReceiptsCount(domain.getReceiptsCount());
         return router;
     }
 

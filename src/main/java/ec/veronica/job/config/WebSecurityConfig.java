@@ -1,5 +1,6 @@
 package ec.veronica.job.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,10 +11,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+@Order(-20)
 @Configuration
 @EnableWebSecurity
-@Order(-20)
+@RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final CustomAuthenticationProvider authProvider;
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
     @Override
     @Bean
@@ -23,8 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("dev").password("{noop}E2jRhFUeNu").roles("USER");
+        auth.authenticationProvider(authProvider).eraseCredentials(false);
     }
 
     @Override
@@ -32,10 +36,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v1/**", "/login*", "/js/**", "/css/**").permitAll()
+                .antMatchers("/login*", "/js/**", "/css/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
+                .successHandler(customAuthenticationSuccessHandler)
                 .loginPage("/login")
                 .defaultSuccessUrl("/");
     }

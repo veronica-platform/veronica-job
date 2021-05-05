@@ -7,6 +7,7 @@ import org.apache.camel.spring.SpringCamelContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordAccessTokenProvider;
 
 @SuppressWarnings("rawtypes")
 @Configuration
@@ -21,6 +22,11 @@ public class BeanConfig {
         SimpleRegistry registry = new SimpleRegistry();
         springCamelContext.setRegistry(registry);
         return springCamelContext;
+    }
+
+    @Bean
+    public ResourceOwnerPasswordAccessTokenProvider resourceOwnerPasswordAccessTokenProvider() {
+        return new ResourceOwnerPasswordAccessTokenProvider();
     }
 
 }
