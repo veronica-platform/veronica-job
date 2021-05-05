@@ -1,5 +1,6 @@
 package ec.veronica.job.service;
 
+import com.rolandopalermo.facturacion.ec.common.StringUtils;
 import com.rolandopalermo.facturacion.ec.common.exception.VeronicaException;
 import ec.veronica.job.domain.Router;
 import ec.veronica.job.dto.RouterDto;
@@ -33,15 +34,8 @@ public class RouterServiceImpl implements RouterService {
     @Override
     public RouterDto create(final RouterDto routerDto) {
         try {
-            String routeId = UUID.randomUUID().toString();
-            RouteBuilder routeBuilder = VeronicaRoute.builder()
-                    .inboxFolder(inboxFolder)
-                    .routeId(routeId)
-                    .rootFolder(routerDto.getRootFolder())
-                    .fileProcessor(fileProcessor)
-                    .build();
+            RouteBuilder routeBuilder = toRoute(routerDto);
             camelContext.addRoutes(routeBuilder);
-            routerDto.setRouteId(routeId);
             routerRepository.save(toDomain(routerDto));
         } catch (Exception ex) {
             String message = format("No se pudo crear la ruta %s", routerDto);
@@ -49,6 +43,18 @@ public class RouterServiceImpl implements RouterService {
             throw new VeronicaException(message);
         }
         return routerDto;
+    }
+
+    @Override
+    public boolean start(RouterDto routerDto) {
+        try {
+            camelContext.addRoutes(toRoute(routerDto));
+        } catch (Exception ex) {
+            String message = format("No se pudo iniciar la ruta %s", routerDto);
+            log.error(message, ex);
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -65,6 +71,18 @@ public class RouterServiceImpl implements RouterService {
     @Override
     public List<RouterDto> findAll() {
         return routerRepository.findAll().stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    private RouteBuilder toRoute(RouterDto routerDto) {
+        if (StringUtils.isEmpty(routerDto.getRouteId())) {
+            routerDto.setRouteId(UUID.randomUUID().toString());
+        }
+        return VeronicaRoute.builder()
+                .inboxFolder(inboxFolder)
+                .routeId(routerDto.getRouteId())
+                .rootFolder(routerDto.getRootFolder())
+                .fileProcessor(fileProcessor)
+                .build();
     }
 
     private Router toDomain(RouterDto dto) {

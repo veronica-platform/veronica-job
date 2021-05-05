@@ -1,10 +1,10 @@
 package ec.veronica.job.config;
 
-import com.rolandopalermo.facturacion.ec.common.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -15,7 +15,6 @@ import org.springframework.security.oauth2.client.token.grant.password.ResourceO
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import static java.lang.String.format;
@@ -47,7 +46,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             obtainToken(username, password);
             return new UsernamePasswordAuthenticationToken(username, authentication.getCredentials(), Collections.emptyList());
         } else {
-            throw new UnauthorizedException(username);
+            throw new BadCredentialsException(username);
         }
     }
 
@@ -69,7 +68,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             token = provider.obtainAccessToken(passwordResourceDetails, defaultAccessTokenRequest);
         } catch (OAuth2AccessDeniedException accessDeniedException) {
             log.error("obtainToken", accessDeniedException);
-            throw new UnauthorizedException(username);
+            throw new BadCredentialsException(username);
         }
         return token;
     }

@@ -8,6 +8,8 @@ public interface RouterService {
 
     RouterDto create(RouterDto routerDto);
 
+    boolean start(RouterDto routerDto);
+
     void remove(String routeId);
 
     List<RouterDto> findAll();
