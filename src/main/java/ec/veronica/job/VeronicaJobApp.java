@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.TimeZone;
@@ -26,10 +27,9 @@ public class VeronicaJobApp implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
-        routerService.findAll().stream()
-                .filter(route -> route.isEnabled())
-                .forEach(route -> routerService.start(route));
+    @Transactional
+    public void run(String... args) {
+        routerService.disableAll();
     }
 
 }

@@ -1,5 +1,7 @@
 package ec.veronica.job.config;
 
+import ec.veronica.job.domain.Credentials;
+import ec.veronica.job.repository.CredentialsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,12 +32,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Value("${veronica.api.client-secret}")
     private String clientSecret;
 
-    @Value("${veronica.api.grant-type}")
-    private String scope;
-
     @Value("${veronica.api.url}")
     private String veronicaApiUrl;
 
+    private final CredentialsRepository credentialsRepository;
     private final ResourceOwnerPasswordAccessTokenProvider provider;
 
     @Override
@@ -44,6 +44,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
         if (!username.isEmpty() && !password.isEmpty()) {
             obtainToken(username, password);
+            credentialsRepository.save(Credentials.builder().username(username).password(password).build());
             return new UsernamePasswordAuthenticationToken(username, authentication.getCredentials(), Collections.emptyList());
         } else {
             throw new BadCredentialsException(username);
@@ -56,21 +57,25 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     }
 
     private OAuth2AccessToken obtainToken(String username, String password) {
+        DefaultAccessTokenRequest defaultAccessTokenRequest = new DefaultAccessTokenRequest();
+        OAuth2AccessToken token;
+        try {
+            token = provider.obtainAccessToken(buildResourceOwnerPasswordResourceDetails(username, password), defaultAccessTokenRequest);
+        } catch (OAuth2AccessDeniedException exception) {
+            log.error("obtainToken", exception);
+            throw new BadCredentialsException(username);
+        }
+        return token;
+    }
+
+    private ResourceOwnerPasswordResourceDetails buildResourceOwnerPasswordResourceDetails(String username, String password) {
         ResourceOwnerPasswordResourceDetails passwordResourceDetails = new ResourceOwnerPasswordResourceDetails();
         passwordResourceDetails.setUsername(username);
         passwordResourceDetails.setPassword(password);
         passwordResourceDetails.setClientId(clientId);
         passwordResourceDetails.setClientSecret(clientSecret);
         passwordResourceDetails.setAccessTokenUri(format(veronicaApiUrl, "oauth/token"));
-        DefaultAccessTokenRequest defaultAccessTokenRequest = new DefaultAccessTokenRequest();
-        OAuth2AccessToken token;
-        try {
-            token = provider.obtainAccessToken(passwordResourceDetails, defaultAccessTokenRequest);
-        } catch (OAuth2AccessDeniedException accessDeniedException) {
-            log.error("obtainToken", accessDeniedException);
-            throw new BadCredentialsException(username);
-        }
-        return token;
+        return passwordResourceDetails;
     }
 
 }

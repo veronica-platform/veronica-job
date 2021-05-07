@@ -1,5 +1,6 @@
 package ec.veronica.job.web;
 
+import ec.veronica.job.service.LogService;
 import ec.veronica.job.service.RouterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -14,12 +15,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class DefaultController {
 
+    private final LogService logService;
     private final RouterService routerService;
 
     @RequestMapping("/")
     public String home(Model model) {
         model.addAttribute("routes", routerService.findAll());
         return "/home";
+    }
+
+    @RequestMapping("/logs")
+    public String logs(Model model) {
+        model.addAttribute("logs", logService.findAll());
+        return "/logs";
     }
 
     @RequestMapping("/login")

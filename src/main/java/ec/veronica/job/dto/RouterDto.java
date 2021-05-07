@@ -16,11 +16,15 @@ import java.math.BigInteger;
 public class RouterDto {
 
     private String routeId;
+
     @NotEmpty
     private String supplierNumber;
+
     @NotEmpty
     private String rootFolder;
-    private boolean enabled;
+
+    private boolean enabled = true;
+
     private BigInteger receiptsCount = BigInteger.ZERO;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -31,17 +35,6 @@ public class RouterDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public BigInteger getReceiptsCount() {
         return receiptsCount;
-    }
-
-    @Override
-    public String toString() {
-        return "RouterDto{" +
-                "routeId='" + routeId + '\'' +
-                ", supplierNumber='" + supplierNumber + '\'' +
-                ", rootFolder='" + rootFolder + '\'' +
-                ", enabled=" + enabled +
-                ", receiptsCount=" + receiptsCount +
-                '}';
     }
 
 }
