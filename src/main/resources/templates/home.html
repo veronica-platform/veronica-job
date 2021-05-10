@@ -36,6 +36,7 @@
                     </div>
                     <div class="col-sm-6">
                         <a href="#addRoteModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Agregar nuevo proceso</span></a>
+                        <a th:href="@{logs}" class="btn btn-primary"><i class="material-icons">&#xe873;</i> <span>Ver todos los logs</span></a>
                         <a th:href="@{/}" class="btn btn-primary"><i class="material-icons">&#xe5d5;</i> <span>Actualizar</span></a>
                     </div>
                 </div>
@@ -43,21 +44,22 @@
             <table class="table table-striped table-hover">
                 <thead>
                 <tr>
-                    <th>ID</th>
+                    <!--<th>ID</th>-->
                     <th>R.U.C.</th>
                     <th>CARPETA RAÍZ</th>
-                    <th>NÚMERO DE COMPROBANTES</th>
+                    <!--<th>NÚMERO DE COMPROBANTES</th>-->
                     <th>ACCIONES</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each ="route : ${routes}">
-                    <td>
-                        <a th:href="@{#}" th:text="${route.routeId}" />
-                    </td>
+                    <!--<td th:utext="${route.routeId}"></td>-->
+                    <!--<td>
+                        <a th:href="@{logs}" th:text="${route.supplierNumber}" />
+                    </td>-->
                     <td th:utext="${route.supplierNumber}"></td>
                     <td th:utext="${route.rootFolder}"></td>
-                    <td th:utext="${route.receiptsCount}"></td>
+                    <!--<td th:utext="${route.receiptsCount}"></td>-->
                     <td>
                         <a th:if="${!route.enabled}" th:href="@{api/routes/{id}/enable(id=${route.routeId})}" class="start"><i class="material-icons" data-toggle="tooltip" title="Iniciar">&#xe1c4;</i></a>
                         <a th:if="${route.enabled}" th:href="@{api/routes/{id}/disable(id=${route.routeId})}" class="pause"><i class="material-icons" data-toggle="tooltip" title="Pausar">&#xe1a2;</i></a>

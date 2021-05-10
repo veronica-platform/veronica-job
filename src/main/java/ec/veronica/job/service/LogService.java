@@ -8,6 +8,10 @@ public interface LogService {
 
     void save(Log log);
 
+    void delete(Long id);
+
+    void deleteAll();
+
     List<Log> findAll();
 
 }

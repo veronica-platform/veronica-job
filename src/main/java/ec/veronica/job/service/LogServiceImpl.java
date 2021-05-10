@@ -19,6 +19,16 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
+    public void delete(Long id) {
+        logRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteAll() {
+        logRepository.deleteAll();
+    }
+
+    @Override
     public List<Log> findAll() {
         return logRepository.findAll();
     }

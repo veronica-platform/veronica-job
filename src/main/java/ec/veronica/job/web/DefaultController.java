@@ -15,19 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class DefaultController {
 
-    private final LogService logService;
     private final RouterService routerService;
 
     @RequestMapping("/")
     public String home(Model model) {
         model.addAttribute("routes", routerService.findAll());
         return "/home";
-    }
-
-    @RequestMapping("/logs")
-    public String logs(Model model) {
-        model.addAttribute("logs", logService.findAll());
-        return "/logs";
     }
 
     @RequestMapping("/login")

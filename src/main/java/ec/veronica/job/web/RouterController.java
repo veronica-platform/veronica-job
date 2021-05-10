@@ -1,4 +1,4 @@
-package ec.veronica.job.web.rest;
+package ec.veronica.job.web;
 
 import ec.veronica.job.dto.RouterDto;
 import ec.veronica.job.service.RouterService;
