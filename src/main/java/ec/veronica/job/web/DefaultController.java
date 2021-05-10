@@ -20,10 +20,10 @@ public class DefaultController {
     @RequestMapping("/")
     public String home(Model model) {
         model.addAttribute("routes", routerService.findAll());
-        return "/home";
+        return "home";
     }
 
-    @RequestMapping("/login")
+    @RequestMapping("login")
     public String login() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
@@ -32,7 +32,7 @@ public class DefaultController {
         return "redirect:/";
     }
 
-    @GetMapping("/403")
+    @GetMapping("403")
     public String error403() {
         return "/error/403";
     }

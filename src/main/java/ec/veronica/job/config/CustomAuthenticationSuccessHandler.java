@@ -18,7 +18,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication a) throws IOException, ServletException {
         RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
         response.setStatus(HttpServletResponse.SC_OK);
-        redirectStrategy.sendRedirect(request, response, "/home");
+        redirectStrategy.sendRedirect(request, response, "/");
     }
 
 }

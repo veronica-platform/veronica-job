@@ -14,10 +14,10 @@ public class LogController {
 
     private final LogService logService;
 
-    @RequestMapping("/logs")
+    @RequestMapping("logs")
     public String logs(Model model) {
         model.addAttribute("logs", logService.findAll());
-        return "/logs";
+        return "logs";
     }
 
     @GetMapping(value = "api/logs/{log-id}/delete")
