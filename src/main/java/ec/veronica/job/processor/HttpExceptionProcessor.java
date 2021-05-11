@@ -1,14 +1,12 @@
 package ec.veronica.job.processor;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.http.common.HttpOperationFailedException;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class HttpExceptionProcessor implements Processor {
