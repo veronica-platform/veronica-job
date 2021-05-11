@@ -67,7 +67,8 @@
                     <!--<td th:utext="${log.id}"> </td>-->
                     <td th:utext="${log.supplierNumber}"></td>
                     <td th:utext="${log.docType}"></td>
-                    <td th:utext="${log.estab + '-' + log.ptoEmision + '-' + log.receiptNumber}"></td>
+                    <td th:if="${log.estab != null and log.ptoEmision != null}" th:utext="${log.estab + '-' + log.ptoEmision + '-' + log.receiptNumber}"></td>
+                    <td th:if="${log.estab == null or log.ptoEmision == null}" th:utext="${log.receiptNumber}"></td>
                     <td>
                         <a th:if="${log.status == 'PENDIENTE'}" href="#" class="pause"><i class="material-icons" data-toggle="tooltip" title="Pendiente">&#xe924;</i></a>
                         <a th:if="${log.status == 'DEVUELTA'}" href="#" class="pause"><i class="material-icons" data-toggle="tooltip" title="Rechazado">&#xe5c9;</i></a>

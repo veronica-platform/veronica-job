@@ -27,8 +27,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
+import org.xml.sax.InputSource;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -55,7 +57,20 @@ public class FileProcessor implements Processor {
     @Override
     public void process(Exchange exchange) {
         byte[] payload = exchange.getIn().getBody(String.class).getBytes(StandardCharsets.UTF_8);
-        ReceiptDetailsDto receiptDetails = readDetails(new String(payload));
+        ReceiptDetailsDto receiptDetails;
+        try {
+            receiptDetails = readDetails(new String(payload));
+        } catch (VeronicaException ex) {
+            log(ex.getMessage(), STATUS_INTERNAL_ERROR.getValue(),
+                    ReceiptDetailsDto
+                            .builder()
+                            .docNumber(exchange.getIn().getHeader("CamelFileName").toString())
+                            .supplierNumber("-")
+                            .docType("-")
+                            .build());
+            exchange.getIn().setHeader("status", STATUS_INTERNAL_ERROR.getValue());
+            return;
+        }
         log.debug("Sending receipt {}", receiptDetails.getDocNumber());
         String responseBody = sendReceipt(payload);
         log.debug("Receipt created {}", receiptDetails.getDocNumber());
@@ -153,19 +168,24 @@ public class FileProcessor implements Processor {
     }
 
     private ReceiptDetailsDto readDetails(String xml) {
-        String docType = xpath(xml, "//codDoc");
-        Optional<DocumentType> optionalDocumentEnum = DocumentType.getFromCode(docType);
-        optionalDocumentEnum.orElseThrow(() -> new VeronicaException(format("El tipo de documento en %s es inválido", xml)));
-        DocumentType documentType = optionalDocumentEnum.get();
-        return ReceiptDetailsDto.builder()
-                .estab(xpath(xml, "//estab"))
-                .ptoEmision(xpath(xml, "//ptoEmi"))
-                .docType(docType)
-                .docNumber(xpath(xml, "//secuencial"))
-                .supplierNumber(xpath(xml, "//ruc"))
-                .customerNumber(xpath(xml, getCustomerNumberXPath(documentType)))
-                .documentType(documentType)
-                .build();
+        try {
+            InputSource inputXML = new InputSource(new StringReader(xml));
+            String docType = xpath(inputXML, "//codDoc");
+            Optional<DocumentType> optionalDocumentEnum = DocumentType.getFromCode(docType);
+            optionalDocumentEnum.orElseThrow(() -> new VeronicaException(format("El tipo de documento en %s es inválido", xml)));
+            DocumentType documentType = optionalDocumentEnum.get();
+            return ReceiptDetailsDto.builder()
+                    .estab(xpath(inputXML, "//estab"))
+                    .ptoEmision(xpath(inputXML, "//ptoEmi"))
+                    .docType(docType)
+                    .docNumber(xpath(inputXML, "//secuencial"))
+                    .supplierNumber(xpath(inputXML, "//ruc"))
+                    .customerNumber(xpath(inputXML, getCustomerNumberXPath(documentType)))
+                    .documentType(documentType)
+                    .build();
+        } catch (VeronicaException ex) {
+            throw ex;
+        }
     }
 
     private String getCustomerNumberXPath(DocumentType documentType) {
