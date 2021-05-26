@@ -44,6 +44,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
         if (!username.isEmpty() && !password.isEmpty()) {
             obtainToken(username, password);
+            credentialsRepository.deleteAll();
             credentialsRepository.save(Credentials.builder().username(username).password(password).build());
             return new UsernamePasswordAuthenticationToken(username, authentication.getCredentials(), Collections.emptyList());
         } else {

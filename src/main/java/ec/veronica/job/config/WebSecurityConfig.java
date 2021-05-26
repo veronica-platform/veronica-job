@@ -34,10 +34,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
+        http.headers().frameOptions().sameOrigin();
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/login*", "/js/**", "/css/**").permitAll()
+                .antMatchers("/login*", "/js/**", "/css/**", "/h2-console/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
