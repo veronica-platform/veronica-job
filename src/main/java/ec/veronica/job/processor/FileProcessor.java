@@ -3,6 +3,7 @@ package ec.veronica.job.processor;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
 import com.rolandopalermo.facturacion.ec.common.StringUtils;
+import com.rolandopalermo.facturacion.ec.common.XmlUtils;
 import com.rolandopalermo.facturacion.ec.common.exception.VeronicaException;
 import com.rolandopalermo.facturacion.ec.common.types.DocumentType;
 import ec.veronica.job.commons.Status;
@@ -27,10 +28,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
-import org.xml.sax.InputSource;
+import org.w3c.dom.Document;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -38,7 +38,6 @@ import java.util.Optional;
 import static ec.veronica.job.commons.Status.STATUS_INTERNAL_ERROR;
 import static ec.veronica.job.commons.Status.STATUS_PENDING;
 import static ec.veronica.job.commons.Status.STATUS_REJECTED;
-import static ec.veronica.job.commons.XmlUtils.xpath;
 import static java.lang.String.format;
 
 @Slf4j
@@ -169,18 +168,18 @@ public class FileProcessor implements Processor {
 
     private ReceiptDetailsDto readDetails(String xml) {
         try {
-            InputSource inputXML = new InputSource(new StringReader(xml));
-            String docType = xpath(inputXML, "//codDoc");
+            Document document = XmlUtils.fromStringToDocument(xml);
+            String docType = XmlUtils.evalXPath(document, "//codDoc").get();
             Optional<DocumentType> optionalDocumentEnum = DocumentType.getFromCode(docType);
             optionalDocumentEnum.orElseThrow(() -> new VeronicaException(format("El tipo de documento en %s es inválido", xml)));
             DocumentType documentType = optionalDocumentEnum.get();
             return ReceiptDetailsDto.builder()
-                    .estab(xpath(inputXML, "//estab"))
-                    .ptoEmision(xpath(inputXML, "//ptoEmi"))
+                    .estab(XmlUtils.evalXPath(document, "//estab").get())
+                    .ptoEmision(XmlUtils.evalXPath(document, "//ptoEmi").get())
                     .docType(docType)
-                    .docNumber(xpath(inputXML, "//secuencial"))
-                    .supplierNumber(xpath(inputXML, "//ruc"))
-                    .customerNumber(xpath(inputXML, getCustomerNumberXPath(documentType)))
+                    .docNumber(XmlUtils.evalXPath(document, "//secuencial").get())
+                    .supplierNumber(XmlUtils.evalXPath(document, "//ruc").get())
+                    .customerNumber(XmlUtils.evalXPath(document, getCustomerNumberXPath(documentType)).get())
                     .documentType(documentType)
                     .build();
         } catch (VeronicaException ex) {
