@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<body>
+<div th:fragment="nav">
+    <nav class="page-header z-depth-3">
+        <div class="nav-wrapper">
+            <ul class="left">
+                <li><span class="brand-logo hide-on-med-and-down"
+                          style="font-size: 22px !important; font-weight: bold; padding-left: 16px;">VERONICA</span>
+                </li>
+            </ul>
+            <ul class="right">
+                <li id="user-account-box"><a href="javascript:void(0)"
+                                             class="hrz-menu dropdown-button dropdown-belowOrigin dropdown-widthChange waves-effect waves-default"
+                                             data-activates='user-account-dropdown'><i class="material-icons">account_circle</i></a>
+                </li>
+            </ul>
+            <ul id='user-account-dropdown' class='dropdown-content'>
+                <li><a href="#!"><i class="material-icons">power_settings_new</i>Cerrar sesi&oacute;n</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+</body>
+</html>

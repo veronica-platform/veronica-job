@@ -1,41 +1,44 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Verónica Job</title>
-
-    <!-- Bootstrap CSS
-    <link href="../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap.css}">-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="../static/css/signin.css" rel="stylesheet" th:href="@{/css/signin.css}">
+    <div th:replace="fragments/header :: header"></div>
+    <title>Login</title>
 </head>
 <body>
-<div class="login-form">
-    <form th:action="@{/login}" method="post">
-        <h2 class="text-center">Log in</h2>
-        <div th:if="${param.error}">
-            <div class="alert alert-danger">
-                Usuario/Contrase&ntilde;a incorrectos
-            </div>
-        </div>
-        <div th:if="${param.logout}">
-            <div class="alert alert-info">
-                You have been logged out.
-            </div>
-        </div>
-        <div class="form-group">
-            <input type="text" class="form-control" name="username" id="username" placeholder="Usuario"
-                   required="required">
-        </div>
-        <div class="form-group">
-            <input type="password" class="form-control" name="password" id="password" placeholder="Contraseña"
-                   required="required">
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-block">Log in</button>
-        </div>
-    </form>
+<div class="page-wrapper">
+    <div id="control-body">
+        <main>
+            <section class="section">
+                <div class="row ">
+                    <div class="col s12">
+                        <div Id="action-form" class="card">
+                            <div class="card-content">
+                                <h1 class="card-title form-title">Bienvenido a Ver&oacute;nica</h1>
+                                <form th:action="@{/login}" method="post">
+                                    <div class="input-field">
+                                        <i class="material-icons prefix">person</i>
+                                        <input id="username" name="username" type="text" class="validate"
+                                               placeholder="Nombre de usuario" autocomplete="off" required>
+                                    </div>
+                                    <div class="input-field">
+                                        <i class="material-icons prefix">lock</i>
+                                        <input id="password" name="password" type="password" class="validate"
+                                               placeholder="Contrase&ntilde;a" autocomplete="off" required>
+                                    </div>
+                                    <div class="input-field">
+                                        <button class="btn btn-action-form btn-block waves-effect waves-light theme-bg"
+                                                type="submit" name="action">Ingresar
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
 </div>
+<div th:replace="fragments/scripts :: scripts"></div>
 </body>
 </html>
