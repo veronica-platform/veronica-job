@@ -643,6 +643,10 @@
   color: #304ffe !important;
 }
 
+.gray {
+  background-color: #e1e1e1 !important;
+}
+
 .blue {
   background-color: #2196F3 !important;
 }
@@ -2121,6 +2125,10 @@
 
 .black-text {
   color: #000000 !important;
+}
+
+.gray-text {
+  color: #0000008A !important;
 }
 
 .white {
@@ -4482,7 +4490,7 @@ html {
 
 @media only screen and (min-width: 1200px) {
   html {
-    font-size: 15px;
+    font-size: .75rem!important;
   }
 }
 
@@ -4514,7 +4522,8 @@ h3 {
 }
 
 h4 {
-  font-size: 2.28rem;
+  /*font-size: 2.28rem;*/
+  font-size: 20px;
   line-height: 110%;
   margin: 1.14rem 0 0.912rem 0;
 }
@@ -5488,8 +5497,8 @@ button.btn-floating {
 }
 
 .dropdown-content li > a, .dropdown-content li > span {
-  font-size: 16px;
-  color: #26a69a;
+  font-size: 14px!important;
+  color: #000 !important;
   display: block;
   line-height: 22px;
   padding: 14px 16px;
@@ -8125,7 +8134,7 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 .carousel.carousel-slider .carousel-item p {
-  font-size: 15px;
+  font-size: .75rem!important;
 }
 
 .carousel .carousel-item {

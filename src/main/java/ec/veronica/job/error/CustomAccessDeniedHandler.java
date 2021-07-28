@@ -28,7 +28,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                     + httpServletRequest.getRequestURI());
         }
         httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/403");
-
     }
 
 }

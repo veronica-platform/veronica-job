@@ -1,6 +1,5 @@
 package ec.veronica.job.web;
 
-import ec.veronica.job.service.LogService;
 import ec.veronica.job.service.RouterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;

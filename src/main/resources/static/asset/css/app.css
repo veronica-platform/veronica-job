@@ -1125,8 +1125,10 @@ a:hover {
 /*header*/
 
 h1.header {
-    font-size: 1.75rem !important;
-    font-weight: 400 !important;
+    /*font-size: 1.75rem !important;
+    font-weight: 400 !important;*/
+    font-size: 24px !important;
+    font-weight: 300 !important;
 }
 
 h2.header {
@@ -1346,7 +1348,7 @@ Left Sidebar
 
 .left-sidebar-body ul li a {
     padding: 0px;
-    font-size: 17px;
+    font-size: 14px;
     font-weight: 400;
     white-space: nowrap;
     overflow: hidden;
@@ -1566,7 +1568,7 @@ Right Sidebar
 
 .content-list .list-content-title {
     margin: 5px 0 0 0;
-    font-size: 15px;
+    font-size: .75rem!important;
     font-weight: 400;
     line-height: 1.6;
     color: #37363e;
@@ -1685,7 +1687,7 @@ Dashboard
 
 .dashboard-nav .dn-title {
     color: rgba(0, 0, 0, 0.64);
-    font-size: 15px;
+    font-size: .75rem!important;
 }
 
 .dashboard-nav .dn-number {

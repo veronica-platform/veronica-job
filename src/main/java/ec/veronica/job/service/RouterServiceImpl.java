@@ -36,14 +36,14 @@ public class RouterServiceImpl implements RouterService {
     @Override
     public RouterDto create(final RouterDto routerDto) {
         routerRepository.findFirstBySupplierNumberOrRootFolder(routerDto.getSupplierNumber(), routerDto.getRootFolder()).ifPresent(r -> {
-            throw new AlreadyExistsException(format("La ruta %s para la empresa %s ya existe", routerDto.getSupplierNumber(), routerDto.getRootFolder()));
+            throw new AlreadyExistsException(format("Ya existe una ruta para la empresa %s", routerDto.getSupplierNumber()));
         });
         RouteBuilder routeBuilder = toRoute(routerDto);
         try {
             camelContext.addRoutes(routeBuilder);
             routerRepository.save(toDomain(routerDto));
         } catch (Exception ex) {
-            String message = format("No se pudo crear la ruta %s", routerDto);
+            String message = format("No se pudo crear la ruta %s para la empresa %s", routerDto.getRootFolder(), routerDto.getSupplierNumber());
             log.error(message, ex);
             throw new VeronicaException(message);
         }
@@ -59,6 +59,7 @@ public class RouterServiceImpl implements RouterService {
         } catch (Exception ex) {
             String message = format("No se pudo iniciar la ruta %s", routeId);
             log.error(message, ex);
+            throw new VeronicaException(message);
         }
     }
 
@@ -70,6 +71,7 @@ public class RouterServiceImpl implements RouterService {
         } catch (Exception ex) {
             String message = format("No se pudo detener la ruta %s", routeId);
             log.error(message, ex);
+            throw new VeronicaException(message);
         }
     }
 
@@ -78,7 +80,6 @@ public class RouterServiceImpl implements RouterService {
     public void remove(String routeId) {
         removeRouteFromContext(routeId);
         routerRepository.deleteById(routeId);
-
     }
 
     @Override

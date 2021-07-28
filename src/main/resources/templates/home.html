@@ -2,9 +2,40 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="fragments/header :: header"></div>
-    <title>Inicio</title>
+    <title>Veronica</title>
 </head>
 <body>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var flag = [[${error}]];
+    window.onload = function () {
+        if (flag) {
+            swal("Error", flag, "error");
+        }
+    };
+    /*]]>*/
+</script>
+<script th:inline="javascript">
+    function deleteRoute(routeId) {
+        swal({
+                title: "¿Estás seguro?",
+                text: "Una vez eliminado, un proceso no puede ser recuperado",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar",
+                closeOnConfirm: false
+            },
+            function () {
+                let form = document.createElement('form');
+                form.action = 'api/routes/' + routeId + '/delete';
+                form.method = 'DELETE';
+                document.body.append(form);
+                form.submit();
+            });
+    }
+</script>
 <div class="page-wrapper">
     <div id="control-body" class="fixed-sidebar medium-sidebar fixed-nav">
         <div th:replace="fragments/nav :: nav"></div>
@@ -13,18 +44,7 @@
         <main class="page-body">
             <div class="row">
                 <div class="col s12 page-title-div">
-                    <!--Page Title-->
-                    <h1 class="header">Procesos</h1>
-                    <p class="header-desc"><a href="https://datatables.net/" target="_blank">DataTables</a> is a plug-in
-                        for the <a href="https://jquery.com/" target="_blank">jQuery</a> Javascript library. It is a
-                        highly flexible tool, based upon the foundations of progressive
-                        enhancement, and will add advanced interaction controls to any HTML table.</p>
-                    <!--Page breadcrumbs-->
-                    <ol class="breadcrumbs left">
-                        <li><a href="dashboard.html">Procesos</a></li>
-                        <li class="active">Listado</li>
-                    </ol>
-                    <!--End page breadcrumbs-->
+                    <h1 class="header">Administraci&oacute;n de procesos</h1>
                 </div>
             </div>
             <section class="section">
@@ -33,43 +53,97 @@
                         <div class="card">
                             <div class="material-table z-depth-1">
                                 <div class="table-header">
-                                    <span class="table-title">Lista de procesos</span>
+                                    <span class="table-title"></span>
                                     <div class="actions">
-                                        <a href="Javascript:void(0)"
+                                        <a href="#add-new-route"
                                            class="waves-effect tooltipped  btn-flat"
                                            data-position="bottom" data-tooltip="Crear proceso"><i
                                                 class="material-icons">add</i></a>
-                                        <a href="Javascript:void(0)"
+                                        <!-- Modal Structure -->
+                                        <div id="add-new-route" class="modal small">
+                                            <form id="createForm" class="col s12" th:action="@{/api/routes}"
+                                                  th:method="post">
+                                                <div class="modal-content">
+                                                    <h4>Crear proceso</h4>
+                                                    <div class="row">
+                                                        <div class="input-field col s12">
+                                                            <input placeholder="Número de R.U.C."
+                                                                   id="supplierNumber" name="supplierNumber" type="text"
+                                                                   class="validate"
+                                                                   autocomplete="off" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="input-field col s12">
+                                                            <input placeholder="Carpeta ra&iacute;z" id="rootFolder"
+                                                                   name="rootFolder"
+                                                                   type="text" class="validate" autocomplete="off"
+                                                                   required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="modal-action waves-effect waves-green btn-flat theme-bg white-text"
+                                                            type="submit" name="action">Guardar
+                                                    </button>
+                                                    <a href="#!"
+                                                       class="modal-action modal-close waves-effect waves-red btn-flat red white-text">Cancelar</a>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <a href="/"
                                            class="search-toggle waves-effect tooltipped btn-flat"
-                                           data-tooltip="Ver todos los logs"><i
-                                                class="material-icons">description</i></a>
-                                        <a href="Javascript:void(0)"
-                                           class="search-toggle waves-effect tooltipped btn-flat"
-                                           data-tooltip="Actualizar"><i
-                                                class="material-icons">refresh</i></a>
+                                           data-tooltip="Actualizar"><i class="material-icons">refresh</i></a>
                                     </div>
                                 </div>
                                 <table id="export-button-datatable" class="bordered highlight">
                                     <thead>
                                     <tr>
-                                        <th>C.I./R.U.C.</th>
+                                        <th style="">C.I./R.U.C.</th>
                                         <th>Carpeta ra&iacute;z</th>
                                         <th>Estado</th>
                                         <th>Acciones</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="route : ${routes}">
-                                        <td th:utext="${route.supplierNumber}"></td>
-                                        <td th:utext="${route.rootFolder}"></td>
-                                        <td th:if="${!route.enabled}">
-                                            <div class="chip" style="background-color: #f8d7da !important;">Detenido</div>
-                                        </td>
-                                        <td th:if="${route.enabled}">
-                                            <div class="chip" style="background-color: #d4edda !important;">En ejecuci&oacute;n</div>
-                                        </td>
-                                        <td></td>
-                                    </tr>
+                                    <th:block th:each="route : ${routes}">
+                                        <tr>
+                                            <td th:utext="${route.supplierNumber}"></td>
+                                            <td th:utext="${route.rootFolder}"></td>
+                                            <td th:if="${!route.enabled}">
+                                                <div class="chip" style="background-color: #f8d7da !important;">Detenido
+                                                </div>
+                                            </td>
+                                            <td th:if="${route.enabled}">
+                                                <div class="chip" style="background-color: #d4edda !important;">En
+                                                    ejecuci&oacute;n
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="col s12 m6 l4">
+                                                    <button class='dropdown-button dropdown-widthChange dropdown-belowOrigin btn-floating gray'
+                                                            href='#'
+                                                            th:attr="data-activates='dropdown' + ${route.routeId}"><i
+                                                            class="material-icons black-text right">list</i></button>
+                                                    <ul th:id="'dropdown' + ${route.routeId}" class='dropdown-content'>
+                                                        <li th:if="${!route.enabled}"><a
+                                                                th:href="@{api/routes/{id}/enable(id=${route.routeId})}"><i
+                                                                class="material-icons gray-text left">play_arrow</i>Iniciar</a>
+                                                        </li>
+                                                        <li th:if="${route.enabled}"><a
+                                                                th:href="@{api/routes/{id}/disable(id=${route.routeId})}"><i
+                                                                class="material-icons gray-text left">stop</i>Pausar</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#"
+                                                               th:attr="onclick=|deleteRoute('${route.routeId}')|"><i
+                                                                    class="material-icons gray-text left">delete</i>Eliminar</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </th:block>
                                     </tbody>
                                 </table>
                             </div>
