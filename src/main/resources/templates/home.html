@@ -127,11 +127,11 @@
                                                             class="material-icons black-text right">list</i></button>
                                                     <ul th:id="'dropdown' + ${route.routeId}" class='dropdown-content'>
                                                         <li th:if="${!route.enabled}"><a
-                                                                th:href="@{api/routes/{id}/enable(id=${route.routeId})}"><i
+                                                                th:href="@{api/routes/{id}/start(id=${route.routeId})}"><i
                                                                 class="material-icons gray-text left">play_arrow</i>Iniciar</a>
                                                         </li>
                                                         <li th:if="${route.enabled}"><a
-                                                                th:href="@{api/routes/{id}/disable(id=${route.routeId})}"><i
+                                                                th:href="@{api/routes/{id}/stop(id=${route.routeId})}"><i
                                                                 class="material-icons gray-text left">stop</i>Pausar</a>
                                                         </li>
                                                         <li>

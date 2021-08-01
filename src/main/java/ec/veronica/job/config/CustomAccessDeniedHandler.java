@@ -1,4 +1,4 @@
-package ec.veronica.job.error;
+package ec.veronica.job.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
