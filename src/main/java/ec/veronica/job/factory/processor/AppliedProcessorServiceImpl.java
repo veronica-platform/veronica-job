@@ -13,7 +13,7 @@ public class AppliedProcessorServiceImpl implements ProcessorService {
     @Override
     public void process(Exchange exchange, byte[] pdf, byte[] xml) {
         exchange.getIn().setHeader("status", STATUS_APPLIED.getValue());
-        exchange.getIn().setHeader("appliedInvoice", pdf);
+        exchange.getIn().setHeader("appliedInvoice", xml);
         exchange.getIn().setHeader("ride", pdf);
     }
 

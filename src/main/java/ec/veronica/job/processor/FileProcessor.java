@@ -45,6 +45,7 @@ public class FileProcessor implements Processor {
         Document document = XmlUtils.fromStringToDocument(new String(payload));
         ReceiptDetails receiptDetails = readDetails(document);
         String responseBody = veronicaHttpClient.sendReceipt(payload);
+        log.debug("SRI response for receipt {} : {}", receiptDetails.getDocNumber(), responseBody);
         SriStatusType sriStatusType = getSriStatus(responseBody);
         String accessKey = getAccessKey(responseBody, sriStatusType);
         byte[] pdf = sriStatusType == STATUS_APPLIED ? veronicaHttpClient.getReceiptFile(accessKey, "pdf") : null;
