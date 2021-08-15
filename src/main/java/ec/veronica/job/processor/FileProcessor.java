@@ -7,9 +7,11 @@ import com.rolandopalermo.facturacion.ec.common.XmlUtils;
 import com.rolandopalermo.facturacion.ec.common.exception.VeronicaException;
 import com.rolandopalermo.facturacion.ec.common.types.DocumentType;
 import com.rolandopalermo.facturacion.ec.common.types.SriStatusType;
+import ec.veronica.job.domain.Log;
 import ec.veronica.job.factory.ExtractorFactory;
 import ec.veronica.job.factory.ProcessorFactory;
 import ec.veronica.job.http.VeronicaHttpClient;
+import ec.veronica.job.service.LogService;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.rolandopalermo.facturacion.ec.common.types.SriStatusType.STATUS_APPLIED;
@@ -35,6 +38,7 @@ import static java.lang.String.format;
 @RequiredArgsConstructor
 public class FileProcessor implements Processor {
 
+    private final LogService logService;
     private final ExtractorFactory extractorFactory;
     private final ProcessorFactory processorFactory;
     private final VeronicaHttpClient veronicaHttpClient;
@@ -47,6 +51,7 @@ public class FileProcessor implements Processor {
         String responseBody = veronicaHttpClient.sendReceipt(payload);
         log.debug("SRI response for receipt {} : {}", receiptDetails.getDocNumber(), responseBody);
         SriStatusType sriStatusType = getSriStatus(responseBody);
+        log(responseBody, sriStatusType, receiptDetails);
         String accessKey = getAccessKey(responseBody, sriStatusType);
         byte[] pdf = sriStatusType == STATUS_APPLIED ? veronicaHttpClient.getReceiptFile(accessKey, "pdf") : null;
         byte[] xml = sriStatusType == STATUS_APPLIED || sriStatusType == STATUS_NOT_APPLIED ? veronicaHttpClient.getReceiptFile(accessKey, "xml") : payload;
@@ -67,7 +72,7 @@ public class FileProcessor implements Processor {
         return ReceiptDetails.builder()
                 .establishment(XmlUtils.evalXPath(document, "//estab").get())
                 .emissionPoint(XmlUtils.evalXPath(document, "//ptoEmi").get())
-                .docType(docType)
+                .docType(optionalDocumentEnum.get().getShortName())
                 .docNumber(XmlUtils.evalXPath(document, "//secuencial").get())
                 .supplierNumber(XmlUtils.evalXPath(document, "//ruc").get())
                 .customerNumber(XmlUtils.evalXPath(document, extractorFactory.get(documentType).getCustomerNumberXPath()).get())
@@ -95,6 +100,21 @@ public class FileProcessor implements Processor {
             }
         }
         return status.orElse(STATUS_PENDING);
+    }
+
+    private void log(String responseBody, SriStatusType status, ReceiptDetails receiptDetails) {
+        Log logEntry = Log
+                .builder()
+                .estab(receiptDetails.getEstablishment())
+                .ptoEmision(receiptDetails.getEmissionPoint())
+                .receiptNumber(receiptDetails.getDocNumber())
+                .docType(receiptDetails.getDocType())
+                .response(responseBody)
+                .status(status.getValue())
+                .supplierNumber(receiptDetails.getSupplierNumber())
+                .insertionDate(LocalDateTime.now())
+                .build();
+        logService.save(logEntry);
     }
 
 }

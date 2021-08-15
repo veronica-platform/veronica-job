@@ -1,150 +1,179 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Verónica - Facturaci&oacute;n electr&oacute;nica</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="../static/css/main.css" rel="stylesheet" th:href="@{/css/main.css}">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#detailsModal').on('show.bs.modal', function (event) {
-                let target = event.relatedTarget;
-                if(target) {
-                    let response = $(target).data('response');
-                    $('#responseBody').text(JSON.stringify(response, undefined, 2));
-                }
-            });
-            $('#deleteLogEntryModal').on('show.bs.modal', function (event) {
-                let target = event.relatedTarget;
-                if(target) {
-                    let logId = $(target).data('id');
-                    $('#deleteLogEntryForm').attr('action', 'api/logs/' + logId + '/delete');
-                }
-            });
-            $('#deleteAllLogsEntryModal').on('show.bs.modal', function (event) {
-                $('#deleteAllLogsEntryForm').attr('action', 'api/logs/delete');
-            });
-        });
-    </script>
+    <div th:replace="fragments/header :: header"></div>
+    <title>Veronica</title>
 </head>
 <body>
-<div class="container-xl">
-    <div class="table-responsive">
-        <div class="table-wrapper">
-            <div class="table-title">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h2>Administar <b>Rutas</b></h2>
-                    </div>
-                    <div class="col-sm-6">
-                        <a class="btn btn-primary" data-toggle="modal" data-target="#deleteAllLogsEntryModal"><i class="material-icons">&#xe92b;</i> <span>Limpiar Logs</span></a>
-                        <a th:href="@{/}" class="btn btn-primary"><i class="material-icons">&#xe5c4;</i> <span>Atr&aacute;s</span></a>
-                    </div>
+<script th:inline="javascript">
+    function deleteAllRoutes() {
+        swal({
+                title: "¿Estás seguro?",
+                text: "Una vez eliminados todos los registros de eventos, no podrán ser recuperados",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar",
+                closeOnConfirm: false
+            },
+            function () {
+                let form = document.createElement('form');
+                form.action = 'api/logs/delete';
+                form.method = 'GET';
+                document.body.append(form);
+                form.submit();
+            });
+    }
+    function deleteEntry(id) {
+        swal({
+                title: "¿Estás seguro?",
+                text: "Una vez eliminada, una entrada de LOG no puede ser recuperada",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar",
+                closeOnConfirm: false
+            },
+            function () {
+                let form = document.createElement('form');
+                form.action = 'api/logs/' + id + '/delete';
+                form.method = 'GET';
+                document.body.append(form);
+                form.submit();
+            });
+    }
+
+    function seeDetails(response) {
+        let objResponse = JSON.parse(response);
+        let formattedResponse = JSON.stringify(objResponse, null, 4);
+
+        let success = objResponse.success;
+        let title = 'Detalles';
+        let message;
+        if (!success) {
+            title = objResponse.result?.comprobantes?.[0].mensajes?.[0].mensaje;
+            message = objResponse.result?.comprobantes?.[0].mensajes?.[0].informacionAdicional;
+            title = title ? title : 'Con errores';
+            message = message ? message : objResponse.result?.message;
+            message = message ? message : objResponse;
+        }
+        $('#responseTitle').html(title ? title : 'Detalles');
+        $('#responseBody').html(message ? message : formattedResponse);
+    }
+</script>
+<div class="page-wrapper">
+    <div id="control-body" class="fixed-sidebar medium-sidebar fixed-nav">
+        <div th:replace="fragments/nav :: nav"></div>
+        <div th:replace="fragments/menu :: menu"></div>
+        <div class="search-overlay hide"></div>
+        <main class="page-body">
+            <div class="row">
+                <div class="col s12 page-title-div">
+                    <h1 class="header">Registro de eventos</h1>
                 </div>
             </div>
-            <table class="table table-striped table-hover">
-                <thead>
-                <tr>
-                    <!--<th>ID</th>-->
-                    <th>R.U.C.</th>
-                    <th>TIPO DE DOCUMENTO</th>
-                    <th>COMPROBANTE</th>
-                    <th>ESTATUS</th>
-                    <th>FECHA DE INSERCI&Oacute;N</th>
-                    <th>ACCIONES</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each ="log : ${logs}">
-                    <!--<td th:utext="${log.id}"> </td>-->
-                    <td th:utext="${log.supplierNumber}"></td>
-                    <td th:utext="${log.docType}"></td>
-                    <td th:if="${log.estab != null and log.ptoEmision != null}" th:utext="${log.estab + '-' + log.ptoEmision + '-' + log.receiptNumber}"></td>
-                    <td th:if="${log.estab == null or log.ptoEmision == null}" th:utext="${log.receiptNumber}"></td>
-                    <td>
-                        <a th:if="${log.status == 'PENDIENTE'}" href="#" class="pause"><i class="material-icons" data-toggle="tooltip" title="Pendiente">&#xe924;</i></a>
-                        <a th:if="${log.status == 'DEVUELTA'}" href="#" class="pause"><i class="material-icons" data-toggle="tooltip" title="Rechazado">&#xe5c9;</i></a>
-                        <a th:if="${log.status == 'CON ERRORES'}" href="#" class="pause"><i class="material-icons" data-toggle="tooltip" title="Con errores">&#xe000;</i></a>
-                        <a th:if="${log.status == 'AUTORIZADO'}" href="#" class="start"><i class="material-icons" data-toggle="tooltip" title="Autorizado">&#xe86c;</i></span></a>
-                        <a th:if="${log.status == 'NO AUTORIZADO'}" href="#" class="delete"><i class="material-icons" data-toggle="tooltip" title="No autorizado">&#xf08c;</i></span></a>
-                    </td>
-                    <td th:utext="${log.insertionDate}"></td>
-                    <td>
-                        <a href="#detailsModal" class="view" data-toggle="modal" th:data-response="${log.response}" data-target="#detailsModal"><i class="material-icons" data-toggle="tooltip" title="Ver detalles">&#xe8f4;</i></a>
-                        <a href="#deleteLogEntryModal" class="delete" data-toggle="modal" th:data-id="${log.id}" data-target="#deleteLogEntryModal"><i class="material-icons" data-toggle="tooltip" title="Eliminar">&#xE872;</i></a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+            <section class="section">
+                <div class="row">
+                    <div class="col s12">
+                        <div class="card">
+                            <div class="material-table z-depth-1">
+                                <div class="table-header">
+                                    <span class="table-title"></span>
+                                    <div class="actions">
+                                        <a href="/logs"
+                                           class="search-toggle waves-effect tooltipped btn-flat"
+                                           data-tooltip="Actualizar"><i class="material-icons">autorenew</i></a>
+                                        <a href="#"
+                                           th:attr="onclick=|deleteAllRoutes()|"
+                                           class="search-toggle waves-effect tooltipped btn-flat"
+                                           data-tooltip="Eliminar todos los eventos"><i class="material-icons">delete</i></a>
+                                    </div>
+                                </div>
+                                <table id="export-button-datatable" class="bordered highlight">
+                                    <thead>
+                                    <tr>
+                                        <th>C.I./R.U.C.</th>
+                                        <th>Tipo de documento</th>
+                                        <th>Comprobante</th>
+                                        <th>Estatus</th>
+                                        <th>Fecha de inserci&oacute;n</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <th:block th:each="log : ${logs}">
+                                        <tr>
+                                            <td th:utext="${log.supplierNumber}"></td>
+                                            <td th:utext="${log.docType}"></td>
+                                            <td th:if="${log.estab != null and log.ptoEmision != null}"
+                                                th:utext="${log.estab + '-' + log.ptoEmision + '-' + log.receiptNumber}"></td>
+                                            <td th:if="${log.estab == null or log.ptoEmision == null}"
+                                                th:utext="${log.receiptNumber}"></td>
+                                            <td th:if="${log.status == 'PENDIENTE'}"><span class="chip red-light"
+                                                                                           th:text="${log.status}"></span>
+                                            </td>
+                                            <td th:if="${log.status == 'DEVUELTA'}"><span class="chip red-light"
+                                                                                          th:text="${log.status}"></span>
+                                            </td>
+                                            <td th:if="${log.status == 'CON ERRORES'}"><span class="chip red-light"
+                                                                                             th:text="${log.status}"></span>
+                                            </td>
+                                            <td th:if="${log.status == 'AUTORIZADO'}"><span class="chip green-light"
+                                                                                            th:text="${log.status}"></span>
+                                            </td>
+                                            <td th:if="${log.status == 'NO AUTORIZADO'}"><span class="chip red-light"
+                                                                                               th:text="${log.status}"></span>
+                                            </td>
+                                            <td th:utext="${#temporals.format(log.insertionDate, 'dd/MM/yyyy HH:mm:ss')}"></td>
+                                            <td>
+                                                <div class="col s12 m6 l4">
+                                                    <button class='dropdown-button dropdown-widthChange dropdown-belowOrigin btn-floating gray'
+                                                            href='#'
+                                                            th:attr="data-activates='dropdown' + ${log.id}"><i
+                                                            class="material-icons black-text right">list</i></button>
+                                                    <ul th:id="'dropdown' + ${log.id}" class='dropdown-content'>
+                                                        <li>
+                                                            <a href="#"
+                                                               th:attr="onclick=|deleteEntry('${log.id}')|"><i
+                                                                    class="material-icons gray-text left">delete</i>Eliminar</a>
+                                                        </li>
+                                                        <li th:if="${log.status != 'AUTORIZADO'}">
+                                                            <a href="#view-details"
+                                                               th:attr="onclick=|seeDetails('${log.response}')|"><i
+                                                                    class="material-icons gray-text left">remove_red_eye</i>Ver
+                                                                detalles</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </th:block>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <div th:replace="fragments/footer :: footer"></div>
     </div>
 </div>
-<div id="detailsModal" class="modal fade">
-    <div class="modal-dialog">
+<div th:replace="fragments/scripts :: scripts"></div>
+<div id="view-details" class="modal small">
+    <form class="col s12">
         <div class="modal-content">
-            <form id="deleteForm">
-                <div class="modal-header">
-                    <h4 class="modal-title">Detalles</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <pre id="responseBody"></pre>
-                </div>
-                <div class="modal-footer">
-                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cerrar">
-                </div>
-            </form>
+            <h5 id="responseTitle"></h5>
+            <h6 id="responseBody"></h6>
         </div>
-    </div>
-</div>
-<!-- Delete Modal HTML -->
-<div id="deleteLogEntryModal" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="deleteLogEntryForm">
-                <div class="modal-header">
-                    <h4 class="modal-title">Eliminar entrada</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <p>¿Está seguro que desea eliminar la entrada del archivo Log?</p>
-                    <p class="text-warning"><small>Esta operación no se puede deshacer.</small></p>
-                </div>
-                <div class="modal-footer">
-                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
-                    <input type="submit" class="btn btn-danger" value="Eliminar">
-                </div>
-            </form>
+        <div class="modal-footer">
+            <a href="#!"
+               class="modal-action modal-close waves-effect waves-red btn-flat red white-text">Cancelar</a>
         </div>
-    </div>
+    </form>
 </div>
-<div id="deleteAllLogsEntryModal" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="deleteAllLogsEntryForm">
-                <div class="modal-header">
-                    <h4 class="modal-title">Limpiar archivo de Logs</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <p>¿Está seguro que desea limpiar el archivo Log?</p>
-                    <p class="text-warning"><small>Esta operación no se puede deshacer.</small></p>
-                </div>
-                <div class="modal-footer">
-                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
-                    <input type="submit" class="btn btn-danger" value="Eliminar">
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+
 </body>
 </html>

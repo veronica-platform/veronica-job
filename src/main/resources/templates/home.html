@@ -111,11 +111,11 @@
                                             <td th:utext="${route.supplierNumber}"></td>
                                             <td th:utext="${route.rootFolder}"></td>
                                             <td th:if="${!route.enabled}">
-                                                <div class="chip" style="background-color: #f8d7da !important;">Detenido
+                                                <div class="chip red-light">Detenido
                                                 </div>
                                             </td>
                                             <td th:if="${route.enabled}">
-                                                <div class="chip" style="background-color: #d4edda !important;">En
+                                                <div class="chip green-light">En
                                                     ejecuci&oacute;n
                                                 </div>
                                             </td>

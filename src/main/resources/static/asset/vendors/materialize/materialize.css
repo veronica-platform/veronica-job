@@ -9293,3 +9293,11 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   stroke-linecap: round;
   /*shape-rendering: crispEdges;*/
 }
+
+.red-light {
+  background-color: #f3989b !important;
+}
+
+.green-light {
+  background-color: #A5D6A7 !important;
+}

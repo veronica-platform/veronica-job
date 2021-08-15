@@ -15,8 +15,6 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -48,7 +46,7 @@ public class RouterServiceImpl implements RouterService {
             camelContext.addRoutes(routeBuilder);
             routerRepository.save(toDomain(routerDto));
         } catch (Exception ex) {
-            log.error("An error occurred trying to create the route - [{}]", ex) ;
+            log.error("An error occurred trying to create the route - [{}]", ex);
             redirectAttributes.addFlashAttribute(ERROR_ATTRIBUTE, "Ocurrió un error interno al crear la ruta");
         }
         return routerDto;
