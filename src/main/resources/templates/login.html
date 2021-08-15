@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <div th:replace="fragments/header :: header"></div>
+    <title>Login</title>
+</head>
+<body>
+<div class="page-wrapper">
+    <div id="control-body">
+        <main>
+            <section class="section">
+                <div class="row ">
+                    <div class="col s12">
+                        <div Id="action-form" class="card">
+                            <div class="card-content">
+                                <h1 class="card-title form-title">Bienvenido a Ver&oacute;nica</h1>
+                                <form th:action="@{/login}" method="post">
+                                    <div class="input-field">
+                                        <i class="material-icons prefix">person</i>
+                                        <input id="username" name="username" type="text" class="validate"
+                                               placeholder="Nombre de usuario" autocomplete="off" required>
+                                    </div>
+                                    <div class="input-field">
+                                        <i class="material-icons prefix">lock</i>
+                                        <input id="password" name="password" type="password" class="validate"
+                                               placeholder="Contrase&ntilde;a" autocomplete="off" required>
+                                    </div>
+                                    <div class="input-field">
+                                        <button class="btn btn-action-form btn-block waves-effect waves-light theme-bg"
+                                                type="submit" name="action">Ingresar
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+<div th:replace="fragments/scripts :: scripts"></div>
+</body>
+</html>

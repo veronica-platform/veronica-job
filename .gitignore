@@ -1,0 +1,21 @@
+target/
+.project
+.classpath
+.settings/
+.svn/
+bin/
+# Intellij
+*.ipr
+*.iml
+.idea
+data/
+out/
+.DS_Store
+/bootstrap
+/dependencies.xml
+.java-version
+/.metadata/
+#IReport
+*.jasper
+
+.factorypath

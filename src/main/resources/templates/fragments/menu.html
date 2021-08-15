@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<body>
+<div th:fragment="menu">
+    <aside>
+        <div class="left-sidebar-overlay"></div>
+        <div class="left-sidebar z-depth-3">
+            <div class="left-sidebar-body">
+                <ul class="leftside-navigation">
+                    <li class="navigation">Men&uacute;</li>
+                    <div class="divider"></div>
+                    <li><a href="/" class="menu waves-effect waves-default tooltipped"
+                           data-position="right" data-delay="50" data-tooltip="Dashboard"><i
+                            class="material-icons left-icon">settings_applications</i><span>Procesos</span></a></li>
+                    <li><a href="logs" class="waves-effect waves-default tooltipped" data-position="right"
+                           data-delay="50" data-tooltip="Grid"><i
+                            class="material-icons left-icon">assignment</i><span>Eventos</span></a></li>
+                </ul>
+            </div>
+            <div class="sidebar-footer">
+                <a href="javascript:void(0)" id="collapsed-left-sidebar"
+                   class="toggle-icon-left-sidebar waves-effect waves-default"><i class="right material-icons">keyboard_arrow_left</i></a>
+            </div>
+        </div>
+    </aside>
+</div>
+</body>
+</html>
