@@ -10,8 +10,8 @@ Cotenidos
 
 ## Pasos previos
 Crear las siguientes variables de entorno en la computadora donde se desplegará la aplicación, utilizando los valores que se le proporcionará al momento de solicitar sus credenciales de acceso a [info@veronica.ec](mailto:info@veronica.ec):
-```
-VERONICA_BASE_URL=""
+```bash
+VERONICA_BASE_URL="https://api-sbox.veronica.ec/api/v1.0/%s" #Ejemplo para ambiente de Sandbox
 VERONICA_OAUTH_CLIENT_ID=""
 VERONICA_OAUTH_CLIENT_SECRET=""
 ```
