@@ -1,5 +1,3 @@
-# Veronica Job
-
 Cotenidos
 =================
 - [Cotenidos](#cotenidos)
