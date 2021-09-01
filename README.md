@@ -27,7 +27,7 @@ java -jar veronica-job-1.0.0-SNAPSHOT.jar
 http://localhost:8080/
 ```
 
-- Para acceder a la base de datos de la aplicacón a través de su consola Web, utilizar el siguiente enlace:
+- Para acceder a la base de datos de la aplicación a través de su consola Web, utilizar el siguiente enlace:
 ```bash
 http://localhost:8080/h2-console
 ```
