@@ -20,12 +20,12 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest httpServletRequest,
                        HttpServletResponse httpServletResponse,
                        AccessDeniedException e) throws IOException, ServletException {
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
-            log.error("User '" + auth.getName()
-                    + "' attempted to access the protected URL: "
-                    + httpServletRequest.getRequestURI());
+            log.error(
+                    "User [{}] attempted to access the protected URL: [{}]",
+                    auth.getName(),
+                    httpServletRequest.getRequestURI());
         }
         httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/403");
     }

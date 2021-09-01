@@ -46,7 +46,7 @@ public class VeronicaHttpClient {
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             responseBody = ex.getResponseBodyAsString();
         } catch (Exception ex) {
-            log.error("Error requesting the url {}", url);
+            log.error("Error requesting the [{}]={}", url, ex.getMessage(), ex);
         }
         return responseBody;
     }
@@ -57,7 +57,7 @@ public class VeronicaHttpClient {
             ResponseEntity<byte[]> result = getOAuth2RestTemplate().getForEntity(format(url, accessKey, format), byte[].class);
             return result.getBody();
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
-            log.error("An error occurred trying to get the receipt file", ex);
+            log.error("An error occurred trying to get the receipt file: [{}]", ex.getMessage(), ex);
             return new byte[0];
         }
     }

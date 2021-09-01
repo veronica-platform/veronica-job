@@ -49,7 +49,7 @@ public class FileProcessor implements Processor {
         Document document = XmlUtils.fromStringToDocument(new String(payload));
         ReceiptDetails receiptDetails = readDetails(document);
         String responseBody = veronicaHttpClient.sendReceipt(payload);
-        log.debug("SRI response for receipt {} : {}", receiptDetails.getDocNumber(), responseBody);
+        log.debug("SRI response for receipt [{}]: [{}]", receiptDetails.getDocNumber(), responseBody);
         SriStatusType sriStatusType = getSriStatus(responseBody);
         log(responseBody, sriStatusType, receiptDetails);
         String accessKey = getAccessKey(responseBody, sriStatusType);

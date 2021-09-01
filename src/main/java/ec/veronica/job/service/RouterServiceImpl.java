@@ -46,7 +46,7 @@ public class RouterServiceImpl implements RouterService {
             camelContext.addRoutes(routeBuilder);
             routerRepository.save(toDomain(routerDto));
         } catch (Exception ex) {
-            log.error("An error occurred trying to create the route - [{}]", ex);
+            log.error("An error occurred trying to create the route due to: [{}]", ex.getMessage(), ex);
             redirectAttributes.addFlashAttribute(ERROR_ATTRIBUTE, "Ocurrió un error interno al crear la ruta");
         }
         return routerDto;
@@ -60,7 +60,7 @@ public class RouterServiceImpl implements RouterService {
             routerRepository.updateStatus(routeId, true);
         } catch (Exception ex) {
             String message = format("No se pudo iniciar la ruta %s", routeId);
-            log.error(message, ex);
+            log.error("Unable to start the route due to: [{}]", ex.getMessage(), ex);
             redirectAttributes.addFlashAttribute(ERROR_ATTRIBUTE, message);
         }
     }
@@ -72,7 +72,7 @@ public class RouterServiceImpl implements RouterService {
             routerRepository.updateStatus(routeId, false);
         } catch (Exception ex) {
             String message = format("No se pudo detener la ruta %s", routeId);
-            log.error(message, ex);
+            log.error("Unable to stop the route due to: [{}]", ex.getMessage(), ex);
             redirectAttributes.addFlashAttribute(ERROR_ATTRIBUTE, message);
         }
     }
@@ -134,7 +134,7 @@ public class RouterServiceImpl implements RouterService {
             }
         } catch (Exception ex) {
             String message = format("No se pudo eliminar la ruta %s", routeId);
-            log.error(message, ex);
+            log.error("Unable to delete the route due to: [{}]", ex.getMessage(), ex);
             throw new VeronicaException(message);
         }
     }

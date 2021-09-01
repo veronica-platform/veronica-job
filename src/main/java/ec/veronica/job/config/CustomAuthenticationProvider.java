@@ -63,8 +63,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         try {
             token = provider.obtainAccessToken(buildResourceOwnerPasswordResourceDetails(username, password), defaultAccessTokenRequest);
         } catch (OAuth2AccessDeniedException exception) {
+            log.error("Error authenticating user [{}]", username, exception);
             throw new BadCredentialsException(username);
         }
+        log.debug("The user [{}] was authenticated successfully", username);
         return token;
     }
 

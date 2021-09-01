@@ -29,7 +29,7 @@ public class VeronicaRoute extends RouteBuilder {
 
     @Override
     public void configure() {
-        log.debug("Registering route for folder {}", rootFolder);
+        log.debug("Registering route for folder: [{}]", rootFolder);
         String endpointFolder = buildDestinationFolder("file:%s%s?delete=true&charset=utf-8", rootFolder, FOLDER_INBOX);
         from(endpointFolder)
                 .routeId(routeId)

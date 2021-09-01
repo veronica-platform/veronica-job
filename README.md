@@ -1,9 +1,35 @@
 # Veronica Job
+
+Cotenidos
+=================
+- [Cotenidos](#cotenidos)
+    - [Software requerido](#software-requerido)
+    - [Pasos previos](#pasos-previos)
+    - [Ejecución](#ejecución)
+
+## Software requerido
+- JDK 1.8.0_121
+
+## Pasos previos
+Crear las siguientes variables de entorno en la computadora donde se desplegará con los valores que se le proporcionará al momento de soliciitar sus credenciales de acceso a [info@veronica.ec](mailto:info@veronica.ec):
 ```
-java -jar -Dspring.profiles.active={PROFILE_HERE}
+export VERONICA_BASE_URL=""
+export VERONICA_OAUTH_CLIENT_ID=""
+export VERONICA_OAUTH_CLIENT_SECRET=""
 ```
 
-# H2
+## Ejecución
+- Para desplegar la aplicación, ejecutar el siguiente comando en la carpeta donde se encuentre el archivo jar:
+```
+java -jar veronica-job-1.0.0-SNAPSHOT.jar
+```
+
+- Para acceder a la aplicación
+```
+http://localhost:8080/
+```
+
+- Para acceder a la base de datos de la aplicacón a través de su consola Web, utilizar el siguiente enlace:
 ```
 http://localhost:8080/h2-console
 ```
