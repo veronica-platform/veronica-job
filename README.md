@@ -15,6 +15,13 @@ VERONICA_BASE_URL="https://api-sbox.veronica.ec/api/v1.0/%s" #Ejemplo para ambie
 VERONICA_OAUTH_CLIENT_ID=""
 VERONICA_OAUTH_CLIENT_SECRET=""
 ```
+La variable `VERONICA_BASE_URL` puede tomar cualquiera de los siguientes valores, dependiendo del ambiente al que queremos conectarnos:
+
+| Ambiente   | URL                                      |
+|------------|------------------------------------------|
+| Desarrollo | https://api-dev.veronica.ec/api/v1.0/%s  |
+| Sandbox    | https://api-sbox.veronica.ec/api/v1.0/%s |
+| Producción | https://api.veronica.ec/api/v1.0/%s      |
 
 ## Ejecución
 - Para desplegar la aplicación, ejecutar el siguiente comando en la carpeta donde se encuentre el archivo jar:
