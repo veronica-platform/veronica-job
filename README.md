@@ -11,9 +11,9 @@ Cotenidos
 ## Pasos previos
 Crear las siguientes variables de entorno en la computadora donde se desplegará la aplicación, utilizando los valores que se le proporcionará al momento de solicitar sus credenciales de acceso a [info@veronica.ec](mailto:info@veronica.ec):
 ```
-export VERONICA_BASE_URL=""
-export VERONICA_OAUTH_CLIENT_ID=""
-export VERONICA_OAUTH_CLIENT_SECRET=""
+VERONICA_BASE_URL=""
+VERONICA_OAUTH_CLIENT_ID=""
+VERONICA_OAUTH_CLIENT_SECRET=""
 ```
 
 ## Ejecución
