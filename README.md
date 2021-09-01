@@ -18,16 +18,16 @@ VERONICA_OAUTH_CLIENT_SECRET=""
 
 ## Ejecución
 - Para desplegar la aplicación, ejecutar el siguiente comando en la carpeta donde se encuentre el archivo jar:
-```
+```bash
 java -jar veronica-job-1.0.0-SNAPSHOT.jar
 ```
 
 - Para acceder a la aplicación
-```
+```bash
 http://localhost:8080/
 ```
 
 - Para acceder a la base de datos de la aplicacón a través de su consola Web, utilizar el siguiente enlace:
-```
+```bash
 http://localhost:8080/h2-console
 ```
