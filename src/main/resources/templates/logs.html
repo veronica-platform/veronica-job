@@ -111,11 +111,11 @@
                                                 th:utext="${log.estab + '-' + log.ptoEmision + '-' + log.receiptNumber}"></td>
                                             <td th:if="${log.estab == null or log.ptoEmision == null}"
                                                 th:utext="${log.receiptNumber}"></td>
-                                            <td th:if="${log.status == 'PENDIENTE'}"><span class="chip red-light"
-                                                                                           th:text="${log.status}"></span>
+                                            <td th:if="${log.status == 'PENDIENTE'}"><span class="chip blue-light"
+                                                                                           th:text="CREADO"></span>
                                             </td>
                                             <td th:if="${log.status == 'DEVUELTA'}"><span class="chip red-light"
-                                                                                          th:text="${log.status}"></span>
+                                                                                          th:text="RECHAZADO"></span>
                                             </td>
                                             <td th:if="${log.status == 'CON ERRORES'}"><span class="chip red-light"
                                                                                              th:text="${log.status}"></span>
@@ -124,7 +124,7 @@
                                                                                             th:text="${log.status}"></span>
                                             </td>
                                             <td th:if="${log.status == 'NO AUTORIZADO'}"><span class="chip red-light"
-                                                                                               th:text="${log.status}"></span>
+                                                                                               th:text="RECHAZADO"></span>
                                             </td>
                                             <td th:utext="${#temporals.format(log.insertionDate, 'dd/MM/yyyy HH:mm:ss')}"></td>
                                             <td>
