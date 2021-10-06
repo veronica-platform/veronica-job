@@ -33,4 +33,9 @@ public class LogServiceImpl implements LogService {
         return logRepository.findAll();
     }
 
+    @Override
+    public Log findById(Long id) {
+        return logRepository.findById(id).orElse(new Log());
+    }
+
 }

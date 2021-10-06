@@ -5,14 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.validation.constraints.NotEmpty;
-import java.math.BigInteger;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class RouterDto {
 
     private String routeId;
@@ -25,16 +26,9 @@ public class RouterDto {
 
     private boolean enabled = true;
 
-    private BigInteger receiptsCount = BigInteger.ZERO;
-
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public String getRouteId() {
         return routeId;
-    }
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    public BigInteger getReceiptsCount() {
-        return receiptsCount;
     }
 
 }

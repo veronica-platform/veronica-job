@@ -14,4 +14,6 @@ public interface LogService {
 
     List<Log> findAll();
 
+    Log findById(Long id);
+
 }

@@ -1,21 +1,47 @@
 <!DOCTYPE html>
 <html lang="es">
+<head>
+    <div th:replace="fragments/header :: header"></div>
+</head>
 <body>
 <div th:fragment="menu">
     <aside>
         <div class="left-sidebar-overlay"></div>
         <div class="left-sidebar z-depth-3">
             <div class="left-sidebar-body">
+                <!--current subscription user plan -->
+                <div class="current-subscription">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td class="center">
+                                <span class="current-plan" th:text="${user.nombres}" th:remove="tag"></span>
+                                <br>
+                                <span class="price" th:text="${user.email}" th:remove="tag"></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="divider"></div>
+                <!--End current subscription user plan -->
+                <!--sidebar menu-->
                 <ul class="leftside-navigation">
                     <li class="navigation">Men&uacute;</li>
                     <div class="divider"></div>
-                    <li><a href="/" class="menu waves-effect waves-default tooltipped"
-                           data-position="right" data-delay="50" data-tooltip="Dashboard"><i
-                            class="material-icons left-icon">settings_applications</i><span>Procesos</span></a></li>
-                    <li><a href="logs" class="waves-effect waves-default tooltipped" data-position="right"
-                           data-delay="50" data-tooltip="Grid"><i
-                            class="material-icons left-icon">assignment</i><span>Eventos</span></a></li>
+                    <li><a href="javascript:void(0)" class="collapsible-label1 waves-effect waves-default tooltipped" data-position="right" data-delay="50" data-tooltip="Procesos"><i class="material-icons left-icon">build</i><i class="material-icons right-icon">arrow_drop_down</i>Procesos</a>
+                        <ul class="collapsible-body">
+                            <li><a href="/procesos" class="waves-effect waves-default">Listar</a></li>
+                            <li><a href="/procesos/crear" class="waves-effect waves-default">Crear</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="javascript:void(0)" class="collapsible-label1 waves-effect waves-default tooltipped" data-position="right" data-delay="50" data-tooltip="Monitoreo"><i class="material-icons left-icon">settings</i><i class="material-icons right-icon">arrow_drop_down</i>Eventos</a>
+                        <ul class="collapsible-body">
+                            <li><a href="/eventos" class="waves-effect waves-default">Listar</a></li>
+                        </ul>
+                    </li>
                 </ul>
+                <!--sidebar menu-->
             </div>
             <div class="sidebar-footer">
                 <a href="javascript:void(0)" id="collapsed-left-sidebar"

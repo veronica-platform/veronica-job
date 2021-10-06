@@ -8,8 +8,8 @@
 <script th:inline="javascript">
     function deleteAllRoutes() {
         swal({
-                title: "¿Estás seguro?",
-                text: "Una vez eliminados todos los registros de eventos, no podrán ser recuperados",
+                title: "¿Está seguro?",
+                text: "Una vez eliminados todos los eventos, no podrán ser recuperados",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonClass: "btn-danger",
@@ -27,8 +27,8 @@
     }
     function deleteEntry(id) {
         swal({
-                title: "¿Estás seguro?",
-                text: "Una vez eliminada, una entrada de LOG no puede ser recuperada",
+                title: "¿Está seguro?",
+                text: "Una vez eliminado, un evento no puede ser recuperado",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonClass: "btn-danger",
@@ -44,24 +44,6 @@
                 form.submit();
             });
     }
-
-    function seeDetails(response) {
-        let objResponse = JSON.parse(response);
-        let formattedResponse = JSON.stringify(objResponse, null, 4);
-
-        let success = objResponse.success;
-        let title = 'Detalles';
-        let message;
-        if (!success) {
-            title = objResponse.result?.comprobantes?.[0].mensajes?.[0].mensaje;
-            message = objResponse.result?.comprobantes?.[0].mensajes?.[0].informacionAdicional;
-            title = title ? title : 'Con errores';
-            message = message ? message : objResponse.result?.message;
-            message = message ? message : objResponse;
-        }
-        $('#responseTitle').html(title ? title : 'Detalles');
-        $('#responseBody').html(message ? message : formattedResponse);
-    }
 </script>
 <div class="page-wrapper">
     <div id="control-body" class="fixed-sidebar medium-sidebar fixed-nav">
@@ -71,7 +53,13 @@
         <main class="page-body">
             <div class="row">
                 <div class="col s12 page-title-div">
-                    <h1 class="header">Registro de eventos</h1>
+                    <h1 class="header">Historial de eventos</h1>
+                    <!--Page breadcrumbs-->
+                    <ol class="breadcrumbs left">
+                        <li><a href="/">Inicio</a></li>
+                        <li>Eventos</li>
+                    </ol>
+                    <!--End page breadcrumbs-->
                 </div>
             </div>
             <section class="section">
@@ -80,15 +68,15 @@
                         <div class="card">
                             <div class="material-table z-depth-1">
                                 <div class="table-header">
-                                    <span class="table-title"></span>
+                                    <span class="table-title">Listado de eventos</span>
                                     <div class="actions">
-                                        <a href="/logs"
-                                           class="search-toggle waves-effect tooltipped btn-flat"
-                                           data-tooltip="Actualizar"><i class="material-icons">autorenew</i></a>
                                         <a href="#"
                                            th:attr="onclick=|deleteAllRoutes()|"
                                            class="search-toggle waves-effect tooltipped btn-flat"
                                            data-tooltip="Eliminar todos los eventos"><i class="material-icons">delete</i></a>
+                                        <a href="/eventos"
+                                           class="search-toggle waves-effect tooltipped btn-flat"
+                                           data-tooltip="Actualizar"><i class="material-icons">autorenew</i></a>
                                     </div>
                                 </div>
                                 <table id="export-button-datatable" class="bordered highlight">
@@ -134,16 +122,15 @@
                                                             th:attr="data-activates='dropdown' + ${log.id}"><i
                                                             class="material-icons black-text right">list</i></button>
                                                     <ul th:id="'dropdown' + ${log.id}" class='dropdown-content'>
+                                                        <li th:if="${log.status != 'AUTORIZADO'}">
+                                                            <a th:href="@{/eventos/{id}/detalles(id=${log.id})}"><i
+                                                                    class="material-icons gray-text left">remove_red_eye</i>Ver
+                                                                detalles</a>
+                                                        </li>
                                                         <li>
                                                             <a href="#"
                                                                th:attr="onclick=|deleteEntry('${log.id}')|"><i
                                                                     class="material-icons gray-text left">delete</i>Eliminar</a>
-                                                        </li>
-                                                        <li th:if="${log.status != 'AUTORIZADO'}">
-                                                            <a href="#view-details"
-                                                               th:attr="onclick=|seeDetails('${log.response}')|"><i
-                                                                    class="material-icons gray-text left">remove_red_eye</i>Ver
-                                                                detalles</a>
                                                         </li>
                                                     </ul>
                                                 </div>

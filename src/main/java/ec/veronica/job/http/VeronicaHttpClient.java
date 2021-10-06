@@ -1,12 +1,15 @@
 package ec.veronica.job.http;
 
 import ec.veronica.job.config.ResourceOwnerPasswordResourceDetailsBuilder;
-import ec.veronica.job.service.LogService;
+import ec.veronica.job.dto.UsuarioInfoDTO;
+import ec.veronica.job.dto.VeronicaResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +36,22 @@ public class VeronicaHttpClient {
     private OAuth2RestTemplate oAuth2RestTemplate;
 
     private final ResourceOwnerPasswordResourceDetailsBuilder resourceOwnerPasswordResourceDetailsBuilder;
+
+    public UsuarioInfoDTO fetchUserInfo() {
+        try {
+            String url = format(veronicaApiUrl, "usuarios/me");
+            ResponseEntity<VeronicaResponseDTO<UsuarioInfoDTO>> result =
+                    getOAuth2RestTemplate().exchange(
+                            url, HttpMethod.GET,
+                            null,
+                            new ParameterizedTypeReference<VeronicaResponseDTO<UsuarioInfoDTO>>() {
+                            });
+            return result.getBody().getResult();
+        } catch (HttpClientErrorException | HttpServerErrorException ex) {
+            log.error("An error occurred trying to get fetch licenses for current user: [{}]", ex.getMessage(), ex);
+            return null;
+        }
+    }
 
     public String sendReceipt(byte[] payload) {
         HttpHeaders headers = new HttpHeaders();

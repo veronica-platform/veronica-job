@@ -2,7 +2,6 @@ package ec.veronica.job.service;
 
 import com.rolandopalermo.facturacion.ec.common.StringUtils;
 import com.rolandopalermo.facturacion.ec.common.exception.ResourceNotFoundException;
-import com.rolandopalermo.facturacion.ec.common.exception.VeronicaException;
 import ec.veronica.job.commons.SessionUtils;
 import ec.veronica.job.domain.Router;
 import ec.veronica.job.dto.RouterDto;
@@ -15,14 +14,12 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static ec.veronica.job.commons.Constants.ERROR_ATTRIBUTE;
 import static java.lang.String.format;
 
 @Slf4j
@@ -35,11 +32,12 @@ public class RouterServiceImpl implements RouterService {
     private final RouterRepository routerRepository;
 
     @Override
-    public RouterDto create(final RouterDto routerDto, RedirectAttributes redirectAttributes) {
+    public void create(final RouterDto routerDto) {
+        log.debug("Registering route [{}]", routerDto);
         Optional<Router> optionalRouter = routerRepository.findFirstBySupplierNumberOrRootFolder(routerDto.getSupplierNumber(), routerDto.getRootFolder());
         if (optionalRouter.isPresent()) {
-            redirectAttributes.addFlashAttribute(ERROR_ATTRIBUTE, format("Ya existe una ruta para la empresa %s", routerDto.getSupplierNumber()));
-            return null;
+            log.error("The supplier [{}] already has a route at [{}]", routerDto.getSupplierNumber(), optionalRouter.get().getRootFolder());
+            return;
         }
         RouteBuilder routeBuilder = toRoute(routerDto);
         try {
@@ -47,38 +45,35 @@ public class RouterServiceImpl implements RouterService {
             routerRepository.save(toDomain(routerDto));
         } catch (Exception ex) {
             log.error("An error occurred trying to create the route due to: [{}]", ex.getMessage(), ex);
-            redirectAttributes.addFlashAttribute(ERROR_ATTRIBUTE, "Ocurrió un error interno al crear la ruta");
         }
-        return routerDto;
     }
 
     @Override
-    public void start(String routeId, RedirectAttributes redirectAttributes) {
+    public void start(String routeId) {
+        log.debug("Starting route [{}]", routeId);
         try {
             RouterDto routerDto = toDto(routerRepository.findById(routeId).orElseThrow(() -> new ResourceNotFoundException(format("La ruta %s", routeId))));
             camelContext.addRoutes(toRoute(routerDto));
             routerRepository.updateStatus(routeId, true);
         } catch (Exception ex) {
-            String message = format("No se pudo iniciar la ruta %s", routeId);
             log.error("Unable to start the route due to: [{}]", ex.getMessage(), ex);
-            redirectAttributes.addFlashAttribute(ERROR_ATTRIBUTE, message);
         }
     }
 
     @Override
-    public void stop(String routeId, RedirectAttributes redirectAttributes) {
+    public void stop(String routeId) {
+        log.debug("Stopping route [{}]", routeId);
         try {
             removeRouteFromContext(routeId);
             routerRepository.updateStatus(routeId, false);
         } catch (Exception ex) {
-            String message = format("No se pudo detener la ruta %s", routeId);
             log.error("Unable to stop the route due to: [{}]", ex.getMessage(), ex);
-            redirectAttributes.addFlashAttribute(ERROR_ATTRIBUTE, message);
         }
     }
 
     @Override
-    public void delete(String routeId, RedirectAttributes redirectAttributes) {
+    public void delete(String routeId) {
+        log.debug("Deleting route [{}]", routeId);
         removeRouteFromContext(routeId);
         routerRepository.deleteById(routeId);
     }
@@ -110,7 +105,6 @@ public class RouterServiceImpl implements RouterService {
         router.setId(dto.getRouteId());
         router.setRootFolder(dto.getRootFolder());
         router.setSupplierNumber(dto.getSupplierNumber());
-        router.setReceiptsCount(dto.getReceiptsCount());
         router.setUsername(SessionUtils.getAuthentication().getName());
         router.setPassword(SessionUtils.getAuthentication().getCredentials().toString());
         return router;
@@ -122,7 +116,6 @@ public class RouterServiceImpl implements RouterService {
         router.setRouteId(domain.getId());
         router.setRootFolder(domain.getRootFolder());
         router.setSupplierNumber(domain.getSupplierNumber());
-        router.setReceiptsCount(domain.getReceiptsCount());
         return router;
     }
 
@@ -133,9 +126,7 @@ public class RouterServiceImpl implements RouterService {
                 camelContext.removeRouteDefinition(routeDefinition);
             }
         } catch (Exception ex) {
-            String message = format("No se pudo eliminar la ruta %s", routeId);
             log.error("Unable to delete the route due to: [{}]", ex.getMessage(), ex);
-            throw new VeronicaException(message);
         }
     }
 

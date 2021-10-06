@@ -1,5 +1,7 @@
 package ec.veronica.job.web;
 
+import ec.veronica.job.http.VeronicaHttpClient;
+import ec.veronica.job.service.LogService;
 import ec.veronica.job.service.RouterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -7,18 +9,42 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
 public class DefaultController {
 
+    private final LogService logService;
     private final RouterService routerService;
+    private final VeronicaHttpClient veronicaHttpClient;
 
-    @RequestMapping("/")
+    @RequestMapping(value = {"/", "/procesos"})
     public String home(Model model) {
+        model.addAttribute("user", veronicaHttpClient.fetchUserInfo());
         model.addAttribute("routes", routerService.findAll());
-        return "home";
+        return "listProcess";
+    }
+
+    @RequestMapping("/procesos/crear")
+    public String addProcess(Model model) {
+        model.addAttribute("user", veronicaHttpClient.fetchUserInfo());
+        return "addProcess";
+    }
+
+    @RequestMapping("/eventos")
+    public String logs(Model model) {
+        model.addAttribute("user", veronicaHttpClient.fetchUserInfo());
+        model.addAttribute("logs", logService.findAll());
+        return "logs";
+    }
+
+    @RequestMapping("/eventos/{log-id}/detalles")
+    public String logDetails(@PathVariable("log-id") Long logId, Model model) {
+        model.addAttribute("user", veronicaHttpClient.fetchUserInfo());
+        model.addAttribute("log", logService.findById(logId));
+        return "logDetails";
     }
 
     @RequestMapping("login")

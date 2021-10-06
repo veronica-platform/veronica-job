@@ -45,29 +45,34 @@ public class FileProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) {
-        byte[] payload = exchange.getIn().getBody(String.class).getBytes(StandardCharsets.UTF_8);
-        Document document = XmlUtils.fromStringToDocument(new String(payload));
-        ReceiptDetails receiptDetails = readDetails(document);
-        String responseBody = veronicaHttpClient.sendReceipt(payload);
-        log.debug("SRI response for receipt [{}]: [{}]", receiptDetails.getDocNumber(), responseBody);
-        SriStatusType sriStatusType = getSriStatus(responseBody);
-        log(responseBody, sriStatusType, receiptDetails);
-        String accessKey = getAccessKey(responseBody, sriStatusType);
-        byte[] pdf = sriStatusType == STATUS_APPLIED ? veronicaHttpClient.getReceiptFile(accessKey, "pdf") : null;
-        byte[] xml = sriStatusType == STATUS_APPLIED || sriStatusType == STATUS_NOT_APPLIED ? veronicaHttpClient.getReceiptFile(accessKey, "xml") : payload;
-        processorFactory.get(sriStatusType).process(exchange, pdf, xml);
-        exchange.getIn().setHeader("folderName", receiptDetails.getCustomerNumber());
-        exchange.getIn().setHeader("fileName", format("%s-%s-%s-%s",
-                receiptDetails.getDocumentType().getShortName(),
-                receiptDetails.getEstablishment(),
-                receiptDetails.getEmissionPoint(),
-                receiptDetails.getDocNumber()));
+        try {
+            byte[] payload = exchange.getIn().getBody(String.class).getBytes(StandardCharsets.UTF_8);
+            Document document = XmlUtils.fromStringToDocument(new String(payload));
+            ReceiptDetails receiptDetails = readDetails(document);
+            String responseBody = veronicaHttpClient.sendReceipt(payload);
+            //log.debug("[{}-{}]: {}", receiptDetails.getDocumentType().getDescription(), receiptDetails.getDocNumber(), responseBody);
+            SriStatusType sriStatusType = getSriStatus(responseBody);
+            log(responseBody, sriStatusType, receiptDetails);
+            String accessKey = getAccessKey(responseBody, sriStatusType);
+            byte[] pdf = sriStatusType == STATUS_APPLIED ? veronicaHttpClient.getReceiptFile(accessKey, "pdf") : null;
+            byte[] xml = sriStatusType == STATUS_APPLIED || sriStatusType == STATUS_NOT_APPLIED ? veronicaHttpClient.getReceiptFile(accessKey, "xml") : payload;
+            processorFactory.get(sriStatusType).process(exchange, pdf, xml);
+            exchange.getIn().setHeader("folderName", receiptDetails.getCustomerNumber());
+            exchange.getIn().setHeader("fileName", format("%s-%s-%s-%s",
+                    receiptDetails.getDocumentType().getShortName(),
+                    receiptDetails.getEstablishment(),
+                    receiptDetails.getEmissionPoint(),
+                    receiptDetails.getDocNumber()));
+        } catch (Exception ex) {
+            log.error("An error has occurred trying to apply the receipt: {}", ex.getMessage());
+            processorFactory.get(STATUS_INTERNAL_ERROR).process(exchange, null, null);
+        }
     }
 
     private ReceiptDetails readDetails(Document document) {
         String docType = XmlUtils.evalXPath(document, "//codDoc").get();
         Optional<DocumentType> optionalDocumentEnum = DocumentType.getFromCode(docType);
-        optionalDocumentEnum.orElseThrow(() -> new VeronicaException(format("El tipo de documento en [%s] es inválido", docType)));
+        optionalDocumentEnum.orElseThrow(() -> new VeronicaException(format("The document type [%s] is invalid", docType)));
         DocumentType documentType = optionalDocumentEnum.get();
         return ReceiptDetails.builder()
                 .establishment(XmlUtils.evalXPath(document, "//estab").get())
