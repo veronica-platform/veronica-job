@@ -49,13 +49,12 @@ public class FileProcessor implements Processor {
             byte[] payload = exchange.getIn().getBody(String.class).getBytes(StandardCharsets.UTF_8);
             Document document = XmlUtils.fromStringToDocument(new String(payload));
             ReceiptDetails receiptDetails = readDetails(document);
-            String responseBody = veronicaHttpClient.sendReceipt(payload);
-            //log.debug("[{}-{}]: {}", receiptDetails.getDocumentType().getDescription(), receiptDetails.getDocNumber(), responseBody);
+            String responseBody = veronicaHttpClient.postAndApply(payload);
             SriStatusType sriStatusType = getSriStatus(responseBody);
             log(responseBody, sriStatusType, receiptDetails);
             String accessKey = getAccessKey(responseBody, sriStatusType);
-            byte[] pdf = sriStatusType == STATUS_APPLIED ? veronicaHttpClient.getReceiptFile(accessKey, "pdf") : null;
-            byte[] xml = sriStatusType == STATUS_APPLIED || sriStatusType == STATUS_NOT_APPLIED ? veronicaHttpClient.getReceiptFile(accessKey, "xml") : payload;
+            byte[] pdf = sriStatusType == STATUS_APPLIED ? veronicaHttpClient.getFile(accessKey, "pdf") : null;
+            byte[] xml = sriStatusType == STATUS_APPLIED || sriStatusType == STATUS_NOT_APPLIED ? veronicaHttpClient.getFile(accessKey, "xml") : payload;
             processorFactory.get(sriStatusType).process(exchange, pdf, xml);
             exchange.getIn().setHeader("folderName", receiptDetails.getCustomerNumber());
             exchange.getIn().setHeader("fileName", format("%s-%s-%s-%s",

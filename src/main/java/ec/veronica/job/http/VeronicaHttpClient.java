@@ -12,7 +12,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -37,51 +36,42 @@ public class VeronicaHttpClient {
 
     private final ResourceOwnerPasswordResourceDetailsBuilder resourceOwnerPasswordResourceDetailsBuilder;
 
-    public UsuarioInfoDTO fetchUserInfo() {
-        try {
-            String url = format(veronicaApiUrl, "usuarios/me");
-            ResponseEntity<VeronicaResponseDTO<UsuarioInfoDTO>> result =
-                    getOAuth2RestTemplate().exchange(
-                            url, HttpMethod.GET,
-                            null,
-                            new ParameterizedTypeReference<VeronicaResponseDTO<UsuarioInfoDTO>>() {
-                            });
-            return result.getBody().getResult();
-        } catch (HttpClientErrorException | HttpServerErrorException ex) {
-            log.error("An error occurred trying to get fetch licenses for current user: [{}]", ex.getMessage(), ex);
-            return null;
-        }
+    public UsuarioInfoDTO getUserInfo() {
+        return oAuth2RestTemplate().exchange(
+                format(veronicaApiUrl, "usuarios/me"),
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<VeronicaResponseDTO<UsuarioInfoDTO>>() {
+                })
+                .getBody().getResult();
     }
 
-    public String sendReceipt(byte[] payload) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_ATOM_XML);
-        HttpEntity<byte[]> entity = new HttpEntity<>(payload, headers);
+    public String postAndApply(byte[] encodedReceipt) {
         String responseBody = "";
         String url = format(veronicaApiUrl, "sri");
         try {
-            ResponseEntity<String> result = getOAuth2RestTemplate().postForEntity(url, entity, String.class);
-            responseBody = result.getBody();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_ATOM_XML);
+            HttpEntity<byte[]> entity = new HttpEntity<>(encodedReceipt, headers);
+            return oAuth2RestTemplate().exchange(url, HttpMethod.POST, entity, String.class).getBody();
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             responseBody = ex.getResponseBodyAsString();
         } catch (Exception ex) {
-            log.error("Error requesting the [{}]={}", url, ex.getMessage(), ex);
+            log.error("Error requesting the [{}]={}", url, ex.getMessage());
         }
         return responseBody;
     }
 
-    public byte[] getReceiptFile(String accessKey, String format) {
-        try {
-            String url = format(veronicaApiUrl, "comprobantes/%s/archivos?copia=true&format=%s");
-            ResponseEntity<byte[]> result = getOAuth2RestTemplate().getForEntity(format(url, accessKey, format), byte[].class);
-            return result.getBody();
-        } catch (HttpClientErrorException | HttpServerErrorException ex) {
-            log.error("An error occurred trying to get the receipt file: [{}]", ex.getMessage(), ex);
-            return new byte[0];
-        }
+    public byte[] getFile(String accessKey, String format) {
+        String url = format(veronicaApiUrl, "comprobantes/%s/archivos?copia=true&format=%s");
+        return oAuth2RestTemplate().exchange(
+                format(url, accessKey, format),
+                HttpMethod.GET,
+                null,
+                byte[].class).getBody();
     }
 
-    private OAuth2RestTemplate getOAuth2RestTemplate() {
+    private OAuth2RestTemplate oAuth2RestTemplate() {
         if (this.oAuth2RestTemplate == null) {
             oAuth2RestTemplate = new OAuth2RestTemplate(resourceOwnerPasswordResourceDetailsBuilder.build());
             oAuth2RestTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
