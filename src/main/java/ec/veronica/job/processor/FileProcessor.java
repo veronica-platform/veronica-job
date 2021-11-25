@@ -23,6 +23,7 @@ import org.apache.camel.Processor;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
+import javax.xml.xpath.XPathExpressionException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -68,7 +69,7 @@ public class FileProcessor implements Processor {
         }
     }
 
-    private ReceiptDetails readDetails(Document document) {
+    private ReceiptDetails readDetails(Document document) throws XPathExpressionException {
         String docType = XmlUtils.evalXPath(document, "//codDoc").get();
         Optional<DocumentType> optionalDocumentEnum = DocumentType.getFromCode(docType);
         optionalDocumentEnum.orElseThrow(() -> new VeronicaException(format("The document type [%s] is invalid", docType)));

@@ -197,6 +197,7 @@
             <artifactId>httpclient</artifactId>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
