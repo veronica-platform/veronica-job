@@ -37,13 +37,7 @@ public class VeronicaHttpClient {
     private final ResourceOwnerPasswordResourceDetailsBuilder resourceOwnerPasswordResourceDetailsBuilder;
 
     public UsuarioInfoDTO getUserInfo() {
-        return oAuth2RestTemplate().exchange(
-                format(veronicaApiUrl, "usuarios/me"),
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<VeronicaResponseDTO<UsuarioInfoDTO>>() {
-                })
-                .getBody().getResult();
+        return OAuth2RestTemplate().exchange(format(veronicaApiUrl, "usuarios/me"), HttpMethod.GET, null, new ParameterizedTypeReference<VeronicaResponseDTO<UsuarioInfoDTO>>() { }).getBody().getResult();
     }
 
     public String postAndApply(byte[] encodedReceipt) {
@@ -53,7 +47,7 @@ public class VeronicaHttpClient {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_ATOM_XML);
             HttpEntity<byte[]> entity = new HttpEntity<>(encodedReceipt, headers);
-            return oAuth2RestTemplate().exchange(url, HttpMethod.POST, entity, String.class).getBody();
+            return OAuth2RestTemplate().exchange(url, HttpMethod.POST, entity, String.class).getBody();
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             responseBody = ex.getResponseBodyAsString();
         } catch (Exception ex) {
@@ -64,14 +58,10 @@ public class VeronicaHttpClient {
 
     public byte[] getFile(String accessKey, String format) {
         String url = format(veronicaApiUrl, "comprobantes/%s/archivos?copia=true&format=%s");
-        return oAuth2RestTemplate().exchange(
-                format(url, accessKey, format),
-                HttpMethod.GET,
-                null,
-                byte[].class).getBody();
+        return OAuth2RestTemplate().exchange(format(url, accessKey, format), HttpMethod.GET, null, byte[].class).getBody();
     }
 
-    private OAuth2RestTemplate oAuth2RestTemplate() {
+    private OAuth2RestTemplate OAuth2RestTemplate() {
         if (this.oAuth2RestTemplate == null) {
             oAuth2RestTemplate = new OAuth2RestTemplate(resourceOwnerPasswordResourceDetailsBuilder.build());
             oAuth2RestTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());

@@ -6,7 +6,7 @@ import ec.veronica.job.commons.SessionUtils;
 import ec.veronica.job.domain.Router;
 import ec.veronica.job.dto.RouterDto;
 import ec.veronica.job.processor.FileProcessor;
-import ec.veronica.job.repository.RouterRepository;
+import ec.veronica.job.repository.sql.RouterRepository;
 import ec.veronica.job.router.VeronicaRoute;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

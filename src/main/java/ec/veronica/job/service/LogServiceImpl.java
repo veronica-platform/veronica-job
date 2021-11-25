@@ -1,7 +1,7 @@
 package ec.veronica.job.service;
 
 import ec.veronica.job.domain.Log;
-import ec.veronica.job.repository.LogRepository;
+import ec.veronica.job.repository.sql.LogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
 package ec.veronica.job.config;
 
 import ec.veronica.job.domain.Credentials;
-import ec.veronica.job.repository.CredentialsRepository;
+import ec.veronica.job.repository.sql.CredentialsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
