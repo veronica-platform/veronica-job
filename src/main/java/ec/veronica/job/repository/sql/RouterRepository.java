@@ -1,4 +1,4 @@
-package ec.veronica.job.repository;
+package ec.veronica.job.repository.sql;
 
 import ec.veronica.job.domain.Router;
 import org.springframework.data.jpa.repository.JpaRepository;
