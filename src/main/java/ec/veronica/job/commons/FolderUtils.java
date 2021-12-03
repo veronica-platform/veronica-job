@@ -2,31 +2,28 @@ package ec.veronica.job.commons;
 
 import lombok.experimental.UtilityClass;
 
-import javax.validation.constraints.NotNull;
 import java.io.File;
-
-import static java.lang.String.format;
+import java.util.List;
+import java.util.Optional;
 
 @UtilityClass
 public class FolderUtils {
 
     private static final String FILE_SEPARATOR = File.separator;
-    private static final String FOLDER_PATTERN = "file:%s%s%s";
+    private static final String FILE_PROTOCOL_NAME = "file:";
 
-    public static String buildDestinationFolder(@NotNull String rootFolder, DestinationFolder destinationFolder) {
-        return buildFolderPath(FOLDER_PATTERN, rootFolder, destinationFolder);
-    }
-
-    public static String buildDestinationFolder(String pattern, @NotNull String rootFolder, DestinationFolder destinationFolder) {
-        return buildFolderPath(pattern, rootFolder, destinationFolder);
-    }
-
-    private static String buildFolderPath(String pattern, @NotNull String rootFolder, DestinationFolder destinationFolder) {
-        StringBuilder sb = new StringBuilder(rootFolder);
-        if (!rootFolder.endsWith(FILE_SEPARATOR)) {
-            sb.append(FILE_SEPARATOR);
+    public static String buildFolderPath(List<String> directories, Optional<String> arguments) {
+        StringBuilder sb = new StringBuilder(FILE_PROTOCOL_NAME);
+        for (String directory : directories) {
+            sb.append(directory);
+            if (!sb.toString().endsWith(FILE_SEPARATOR)) {
+                sb.append(FILE_SEPARATOR);
+            }
         }
-        return format(pattern, sb, destinationFolder.getValue(), FILE_SEPARATOR);
+        if (arguments.isPresent()) {
+            sb.append("?").append(arguments.get());
+        }
+        return sb.toString();
     }
 
 }
