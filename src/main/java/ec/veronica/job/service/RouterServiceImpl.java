@@ -1,7 +1,7 @@
 package ec.veronica.job.service;
 
-import com.rolandopalermo.facturacion.ec.common.StringUtils;
-import com.rolandopalermo.facturacion.ec.common.exception.ResourceNotFoundException;
+import ec.veronica.common.StringUtils;
+import ec.veronica.common.exception.ResourceNotFoundException;
 import ec.veronica.job.commons.SessionUtils;
 import ec.veronica.job.domain.Router;
 import ec.veronica.job.dto.RouterDto;

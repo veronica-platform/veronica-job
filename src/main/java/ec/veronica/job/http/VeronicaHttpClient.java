@@ -1,7 +1,7 @@
 package ec.veronica.job.http;
 
 import ec.veronica.job.config.ResourceOwnerPasswordResourceDetailsBuilder;
-import ec.veronica.job.dto.UsuarioInfoDTO;
+import ec.veronica.job.dto.UsuarioResponseDto;
 import ec.veronica.job.dto.VeronicaResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,8 +36,8 @@ public class VeronicaHttpClient {
 
     private final ResourceOwnerPasswordResourceDetailsBuilder resourceOwnerPasswordResourceDetailsBuilder;
 
-    public UsuarioInfoDTO getUserInfo() {
-        return OAuth2RestTemplate().exchange(format(veronicaApiUrl, "usuarios/me"), HttpMethod.GET, null, new ParameterizedTypeReference<VeronicaResponseDTO<UsuarioInfoDTO>>() { }).getBody().getResult();
+    public UsuarioResponseDto getUserInfo() {
+        return OAuth2RestTemplate().exchange(format(veronicaApiUrl, "usuarios/me"), HttpMethod.GET, null, new ParameterizedTypeReference<VeronicaResponseDTO<UsuarioResponseDto>>() { }).getBody().getResult();
     }
 
     public String postAndApply(byte[] encodedReceipt) {

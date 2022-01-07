@@ -8,10 +8,10 @@ import org.apache.camel.builder.RouteBuilder;
 
 import java.util.Optional;
 
-import static com.rolandopalermo.facturacion.ec.common.types.SriStatusType.STATUS_APPLIED;
-import static com.rolandopalermo.facturacion.ec.common.types.SriStatusType.STATUS_INTERNAL_ERROR;
-import static com.rolandopalermo.facturacion.ec.common.types.SriStatusType.STATUS_NOT_APPLIED;
-import static com.rolandopalermo.facturacion.ec.common.types.SriStatusType.STATUS_PENDING;
+import static ec.veronica.common.types.SriStatusType.STATUS_APPLIED;
+import static ec.veronica.common.types.SriStatusType.STATUS_INTERNAL_ERROR;
+import static ec.veronica.common.types.SriStatusType.STATUS_NOT_APPLIED;
+import static ec.veronica.common.types.SriStatusType.STATUS_PENDING;
 import static ec.veronica.job.commons.DestinationFolder.FOLDER_AUTHORIZED;
 import static ec.veronica.job.commons.DestinationFolder.FOLDER_INBOX;
 import static ec.veronica.job.commons.DestinationFolder.FOLDER_PENDING;

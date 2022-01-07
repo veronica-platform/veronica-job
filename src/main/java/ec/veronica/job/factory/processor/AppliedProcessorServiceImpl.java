@@ -1,11 +1,11 @@
 package ec.veronica.job.factory.processor;
 
-import com.rolandopalermo.facturacion.ec.common.types.SriStatusType;
+import ec.veronica.common.types.SriStatusType;
 import ec.veronica.job.factory.ProcessorService;
 import org.apache.camel.Exchange;
 import org.springframework.stereotype.Service;
 
-import static com.rolandopalermo.facturacion.ec.common.types.SriStatusType.STATUS_APPLIED;
+import static ec.veronica.common.types.SriStatusType.STATUS_APPLIED;
 
 @Service
 public class AppliedProcessorServiceImpl implements ProcessorService {

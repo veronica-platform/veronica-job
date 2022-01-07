@@ -1,6 +1,6 @@
 package ec.veronica.job.factory;
 
-import com.rolandopalermo.facturacion.ec.common.types.SriStatusType;
+import ec.veronica.common.types.SriStatusType;
 import org.apache.camel.Exchange;
 
 public interface ProcessorService {

@@ -1,6 +1,6 @@
 package ec.veronica.job.factory;
 
-import com.rolandopalermo.facturacion.ec.common.interfaces.Supportable;
+import ec.veronica.common.interfaces.Supportable;
 
 public interface ExtractorService extends Supportable {
 

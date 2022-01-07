@@ -38,3 +38,8 @@ http://localhost:8080/
 ```bash
 http://localhost:8080/h2-console
 ```
+
+- Ejemplos de rutas
+```bash
+C:\\ROOT\\XML\\
+```

@@ -1,6 +1,6 @@
 package ec.veronica.job.factory;
 
-import com.rolandopalermo.facturacion.ec.common.types.DocumentType;
+import ec.veronica.common.types.DocumentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

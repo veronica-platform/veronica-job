@@ -35,7 +35,7 @@
                                     <div class="row">
                                         <div class="input-field col s12">
                                             <select id="supplierNumber" name="supplierNumber">
-                                                <option th:each="license : ${user.licencias}"
+                                                <option th:each="license : ${licenses}"
                                                         th:text="${license.numeroRuc}"
                                                         th:value="${license.numeroRuc}">
                                                 </option>

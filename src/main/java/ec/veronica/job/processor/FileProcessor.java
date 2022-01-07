@@ -2,10 +2,10 @@ package ec.veronica.job.processor;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
-import com.rolandopalermo.facturacion.ec.common.SriEntity;
-import com.rolandopalermo.facturacion.ec.common.StringUtils;
-import com.rolandopalermo.facturacion.ec.common.XmlUtils;
-import com.rolandopalermo.facturacion.ec.common.types.SriStatusType;
+import ec.veronica.common.ReceiptDetails;
+import ec.veronica.common.SriUtils;
+import ec.veronica.common.StringUtils;
+import ec.veronica.common.types.SriStatusType;
 import ec.veronica.job.domain.Log;
 import ec.veronica.job.factory.ExtractorFactory;
 import ec.veronica.job.factory.ProcessorFactory;
@@ -23,12 +23,11 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static com.rolandopalermo.facturacion.ec.common.SriUtils.getReceiptDetails;
-import static com.rolandopalermo.facturacion.ec.common.XmlUtils.evalXPath;
-import static com.rolandopalermo.facturacion.ec.common.types.SriStatusType.STATUS_APPLIED;
-import static com.rolandopalermo.facturacion.ec.common.types.SriStatusType.STATUS_INTERNAL_ERROR;
-import static com.rolandopalermo.facturacion.ec.common.types.SriStatusType.STATUS_NOT_APPLIED;
-import static com.rolandopalermo.facturacion.ec.common.types.SriStatusType.STATUS_PENDING;
+import static ec.veronica.common.XmlUtils.evalXPath;
+import static ec.veronica.common.types.SriStatusType.STATUS_APPLIED;
+import static ec.veronica.common.types.SriStatusType.STATUS_INTERNAL_ERROR;
+import static ec.veronica.common.types.SriStatusType.STATUS_NOT_APPLIED;
+import static ec.veronica.common.types.SriStatusType.STATUS_PENDING;
 import static java.lang.String.format;
 
 @Slf4j
@@ -45,23 +44,23 @@ public class FileProcessor implements Processor {
     public void process(Exchange exchange) {
         try {
             byte[] payload = exchange.getIn().getBody(String.class).getBytes(StandardCharsets.UTF_8);
-            Document document = XmlUtils.fromStringToDocument(new String(payload));
-            SriEntity sriEntity = getReceiptDetails(document, "");
-            log.info("Start processing for supplier {} and receipt: {}-{}-{}-{}",
-                    sriEntity.getSupplierNumber(),
-                    sriEntity.getDocumentType().getShortName(),
-                    sriEntity.getEstablishment(),
-                    sriEntity.getEmissionPoint(),
-                    sriEntity.getDocumentNumber());
+            ReceiptDetails receiptDetails = SriUtils.getDetails(new String(payload), "");
+            log.info("Processing receipt for supplier {} and receipt: {}-{}-{}-{}",
+                    receiptDetails.getSupplierNumber(),
+                    receiptDetails.getDocumentType().getShortName(),
+                    receiptDetails.getEstablishment(),
+                    receiptDetails.getEmissionPoint(),
+                    receiptDetails.getDocumentNumber());
             String responseBody = veronicaHttpClient.postAndApply(payload);
             SriStatusType sriStatusType = getSriStatus(responseBody);
-            log(responseBody, sriStatusType, sriEntity);
+            log(responseBody, sriStatusType, receiptDetails);
             String accessKey = getAccessKey(responseBody, sriStatusType);
             byte[] pdf = sriStatusType == STATUS_APPLIED ? veronicaHttpClient.getFile(accessKey, "pdf") : null;
             byte[] xml = sriStatusType == STATUS_APPLIED || sriStatusType == STATUS_NOT_APPLIED ? veronicaHttpClient.getFile(accessKey, "xml") : payload;
             processorFactory.get(sriStatusType).process(exchange, pdf, xml);
-            exchange.getIn().setHeader("folderName", getCustomerNumber(document, sriEntity));
-            exchange.getIn().setHeader("fileName", getFileName(sriEntity));
+            exchange.getIn().setHeader("folderName", getCustomerNumber(receiptDetails.getDocument(), receiptDetails));
+            exchange.getIn().setHeader("fileName", getFileName(receiptDetails));
+            log.info("Process completed");
         } catch (Exception ex) {
             log.error("An error has occurred trying to apply the receipt: {}", ex.getMessage());
             processorFactory.get(STATUS_INTERNAL_ERROR).process(exchange, null, null);
@@ -69,15 +68,15 @@ public class FileProcessor implements Processor {
     }
 
     /**
-     * @param sriEntity
+     * @param receiptDetails
      * @return
      */
-    private String getFileName(SriEntity sriEntity) {
+    private String getFileName(ReceiptDetails receiptDetails) {
         return format("%s-%s-%s-%s",
-                sriEntity.getDocumentType().getShortName(),
-                sriEntity.getEstablishment(),
-                sriEntity.getEmissionPoint(),
-                sriEntity.getDocumentNumber()
+                receiptDetails.getDocumentType().getShortName(),
+                receiptDetails.getEstablishment(),
+                receiptDetails.getEmissionPoint(),
+                receiptDetails.getDocumentNumber()
         );
     }
 
@@ -87,7 +86,7 @@ public class FileProcessor implements Processor {
      * @return
      * @throws XPathExpressionException
      */
-    private String getCustomerNumber(Document document, SriEntity sriEntity) throws XPathExpressionException {
+    private String getCustomerNumber(Document document, ReceiptDetails sriEntity) throws XPathExpressionException {
         return evalXPath(document, extractorFactory.get(sriEntity.getDocumentType()).getCustomerNumberXPath()).get();
     }
 
@@ -125,18 +124,18 @@ public class FileProcessor implements Processor {
     /**
      * @param responseBody
      * @param status
-     * @param sriEntity
+     * @param receiptDetails
      */
-    private void log(String responseBody, SriStatusType status, SriEntity sriEntity) {
+    private void log(String responseBody, SriStatusType status, ReceiptDetails receiptDetails) {
         Log logEntry = Log
                 .builder()
-                .estab(sriEntity.getEstablishment())
-                .ptoEmision(sriEntity.getEmissionPoint())
-                .receiptNumber(sriEntity.getDocumentNumber())
-                .docType(sriEntity.getDocumentType().getNombre())
+                .estab(receiptDetails.getEstablishment())
+                .ptoEmision(receiptDetails.getEmissionPoint())
+                .receiptNumber(receiptDetails.getDocumentNumber())
+                .docType(receiptDetails.getDocumentType().getNombre())
                 .response(responseBody)
                 .status(status.getValue())
-                .supplierNumber(sriEntity.getSupplierNumber())
+                .supplierNumber(receiptDetails.getSupplierNumber())
                 .insertionDate(LocalDateTime.now())
                 .build();
         logService.save(logEntry);

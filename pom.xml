@@ -17,7 +17,7 @@
         <jackson.version>2.11.1</jackson.version>
         <camel.version>2.25.2</camel.version>
         <veronica-common.version>1.0.0-SNAPSHOT</veronica-common.version>
-        <h2.version>1.4.199</h2.version>
+        <h2.version>2.0.206</h2.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -126,19 +126,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>com.rolandopalermo.facturacion.ec</groupId>
+            <groupId>ec.veronica</groupId>
             <artifactId>veronica-common</artifactId>
             <version>${veronica-common.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
         </dependency>
-
         <!-- asynchronous loggers -->
         <dependency>
             <groupId>com.lmax</groupId>
@@ -197,7 +194,6 @@
             <artifactId>httpclient</artifactId>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>

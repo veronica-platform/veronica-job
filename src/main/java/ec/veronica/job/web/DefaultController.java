@@ -27,27 +27,28 @@ public class DefaultController {
 
     @RequestMapping(value = {"/", "/procesos"})
     public String home(Model model) {
-        model.addAttribute("user", veronicaHttpClient.getUserInfo());
+        model.addAttribute("user", veronicaHttpClient.getUserInfo().getUsuario());
         model.addAttribute("routes", routerService.findAll());
         return "listProcess";
     }
 
     @RequestMapping("/procesos/crear")
     public String addProcess(Model model) {
-        model.addAttribute("user", veronicaHttpClient.getUserInfo());
+        model.addAttribute("user", veronicaHttpClient.getUserInfo().getUsuario());
+        model.addAttribute("licenses", veronicaHttpClient.getUserInfo().getLicencias());
         return "addProcess";
     }
 
     @RequestMapping("/eventos")
     public String logs(Model model) {
-        model.addAttribute("user", veronicaHttpClient.getUserInfo());
+        model.addAttribute("user", veronicaHttpClient.getUserInfo().getUsuario());
         model.addAttribute("logs", logService.findAll());
         return "logs";
     }
 
     @RequestMapping("/eventos/{log-id}/detalles")
     public String logDetails(@PathVariable("log-id") Long logId, Model model) {
-        model.addAttribute("user", veronicaHttpClient.getUserInfo());
+        model.addAttribute("user", veronicaHttpClient.getUserInfo().getUsuario());
         model.addAttribute("log", logService.findById(logId));
         return "logDetails";
     }

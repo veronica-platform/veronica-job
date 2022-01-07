@@ -1,6 +1,6 @@
 package ec.veronica.job.config;
 
-import com.rolandopalermo.facturacion.ec.common.exception.VeronicaException;
+import ec.veronica.common.exception.VeronicaException;
 import ec.veronica.job.domain.Credentials;
 import ec.veronica.job.repository.sql.CredentialsRepository;
 import lombok.Data;
