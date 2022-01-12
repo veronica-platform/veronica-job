@@ -60,7 +60,7 @@ public class FileProcessor implements Processor {
             processorFactory.get(sriStatusType).process(exchange, pdf, xml);
             exchange.getIn().setHeader("folderName", getCustomerNumber(receiptDetails.getDocument(), receiptDetails));
             exchange.getIn().setHeader("fileName", getFileName(receiptDetails));
-            log.info("Process completed");
+            log.info("Process completed successfully");
         } catch (Exception ex) {
             log.error("An error has occurred trying to apply the receipt: {}", ex.getMessage());
             processorFactory.get(STATUS_INTERNAL_ERROR).process(exchange, null, null);
@@ -132,7 +132,7 @@ public class FileProcessor implements Processor {
                 .estab(receiptDetails.getEstablishment())
                 .ptoEmision(receiptDetails.getEmissionPoint())
                 .receiptNumber(receiptDetails.getDocumentNumber())
-                .docType(receiptDetails.getDocumentType().getNombre())
+                .docType(receiptDetails.getDocumentType().getDescription())
                 .response(responseBody)
                 .status(status.getValue())
                 .supplierNumber(receiptDetails.getSupplierNumber())

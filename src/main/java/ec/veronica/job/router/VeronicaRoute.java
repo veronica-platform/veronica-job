@@ -33,24 +33,24 @@ public class VeronicaRoute extends RouteBuilder {
     @Override
     public void configure() {
         log.debug("Registering route for folder: [{}]", rootFolder);
-        var endpointFolder = buildFolderPath(asList(rootFolder, FOLDER_INBOX.getValue()), Optional.empty());
+        var endpointFolder = buildFolderPath(asList(rootFolder, FOLDER_INBOX.getValue()), Optional.of("delete=true&charset=utf-8"));
         var xmlFileName = Optional.of("fileName=${header.fileName}.xml");
         var pdfFileName = Optional.of("fileName=${header.fileName}.pdf");
         from(endpointFolder)
                 .routeId(routeId)
                 .process(fileProcessor)
                 .choice()
-                    .when().simple(is(STATUS_PENDING.getValue()))
-                        .to(buildFolderPath(asList(rootFolder, FOLDER_PENDING.getValue()), xmlFileName))
-                    .when().simple(is(STATUS_INTERNAL_ERROR.getValue()))
-                        .to(buildFolderPath(asList(rootFolder, FOLDER_PROCESSING_ERROR.getValue()), xmlFileName))
-                    .when().simple(is(STATUS_INTERNAL_ERROR.getValue()))
-                        .to(buildFolderPath(asList(rootFolder, FOLDER_REJECTED.getValue()), xmlFileName))
-                    .when().simple(is(STATUS_NOT_APPLIED.getValue()))
-                        .setBody(simple("${header.appliedInvoice}")).toD(buildFolderPath(asList(rootFolder, FOLDER_UNAUTHORIZED.getValue()), xmlFileName))
-                    .when().simple(is(STATUS_APPLIED.getValue()))
-                        .setBody(simple("${header.appliedInvoice}")).toD(buildFolderPath(asList(rootFolder, FOLDER_AUTHORIZED.getValue(), "${header.folderName}"), xmlFileName))
-                        .setBody(simple("${header.ride}")).toD(buildFolderPath(asList(rootFolder, FOLDER_AUTHORIZED.getValue(), "${header.folderName}"), pdfFileName))
+                .when().simple(is(STATUS_PENDING.getValue()))
+                .to(buildFolderPath(asList(rootFolder, FOLDER_PENDING.getValue()), xmlFileName))
+                .when().simple(is(STATUS_INTERNAL_ERROR.getValue()))
+                .to(buildFolderPath(asList(rootFolder, FOLDER_PROCESSING_ERROR.getValue()), xmlFileName))
+                .when().simple(is(STATUS_INTERNAL_ERROR.getValue()))
+                .to(buildFolderPath(asList(rootFolder, FOLDER_REJECTED.getValue()), xmlFileName))
+                .when().simple(is(STATUS_NOT_APPLIED.getValue()))
+                .setBody(simple("${header.appliedInvoice}")).toD(buildFolderPath(asList(rootFolder, FOLDER_UNAUTHORIZED.getValue()), xmlFileName))
+                .when().simple(is(STATUS_APPLIED.getValue()))
+                .setBody(simple("${header.appliedInvoice}")).toD(buildFolderPath(asList(rootFolder, FOLDER_AUTHORIZED.getValue(), "${header.folderName}"), xmlFileName))
+                .setBody(simple("${header.ride}")).toD(buildFolderPath(asList(rootFolder, FOLDER_AUTHORIZED.getValue(), "${header.folderName}"), pdfFileName))
         ;
     }
 
