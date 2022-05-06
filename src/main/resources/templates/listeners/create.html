@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header"></div>
+    <title>Veronica</title>
+    <meta th:name="${_csrf.parameterName}" th:content="${_csrf.token}"/>
+</head>
+<body>
+<div class="page-wrapper">
+    <div id="control-body" class="fixed-sidebar medium-sidebar fixed-nav">
+        <div th:replace="fragments/nav :: nav"></div>
+        <div th:replace="fragments/menu :: menu"></div>
+        <div class="search-overlay hide"></div>
+        <main class="page-body">
+            <div class="row">
+                <div class="col s12 page-title-div">
+                    <h1 class="header">Administraci&oacute;n de procesos</h1>
+                    <!--Page breadcrumbs-->
+                    <ol class="breadcrumbs left">
+                        <li><a href="/">Inicio</a></li>
+                        <li><a href="/procesos">Procesos</a></li>
+                        <li class="active">Crear</li>
+                    </ol>
+                    <!--End page breadcrumbs-->
+                </div>
+            </div>
+            <section class="section">
+                <div class="row">
+                    <!--start column-->
+                    <div class="col s12">
+                        <!--start card-->
+                        <div class="card card-form">
+                            <div class="card-content">
+                                <span class="card-title form-header">Crear proceso</span>
+                                <form id="create-form">
+                                    <div class="row">
+                                        <div class="input-field col s12">
+                                            <select id="supplierNumber" name="supplierNumber">
+                                                <option th:each="license : ${licenses}"
+                                                        th:text="${license.numeroRuc} + ' - ' + ${license.razonSocial}"
+                                                        th:value="${license.numeroRuc}">
+                                                </option>
+                                            </select>
+                                            <label>Empresa</label>
+                                        </div>
+                                        <div class="input-field col s12">
+                                            <input id="rootFolder" name="rootFolder" type="text">
+                                            <label for="rootFolder">Carpeta ra&iacute;z</label>
+                                        </div>
+                                        <div class="col s12">
+                                            <button class="btn waves-effect waves-light right theme-bg" type="submit"
+                                                    name="action">Crear <i
+                                                    class="material-icons right">send</i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!--end card-->
+                    </div>
+                    <!--end column-->
+                </div>
+            </section>
+        </main>
+        <div th:replace="fragments/footer :: footer"></div>
+    </div>
+</div>
+<div th:replace="fragments/scripts :: scripts"></div>
+<script th:src="@{/js/http/listeners.js}" type="text/javascript"></script>
+</body>
+</html>

@@ -1,21 +1,22 @@
 package ec.veronica.job;
 
-import ec.veronica.job.service.RouterService;
+import ec.veronica.job.service.ListenerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 
+@EnableWebSecurity
 @RequiredArgsConstructor
-@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+@SpringBootApplication
 public class VeronicaJobApp implements CommandLineRunner {
 
-    private final RouterService routerService;
+    private final ListenerService listenerService;
 
     @PostConstruct
     public void init() {
@@ -29,7 +30,7 @@ public class VeronicaJobApp implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
-        routerService.disableAll();
+        listenerService.disableAll();
     }
 
 }

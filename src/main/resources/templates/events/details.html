@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header"></div>
+    <title>Veronica</title>
+</head>
+<body>
+<div class="page-wrapper">
+    <div id="control-body" class="fixed-sidebar medium-sidebar fixed-nav">
+        <div th:replace="fragments/nav :: nav"></div>
+        <div th:replace="fragments/menu :: menu"></div>
+        <div class="search-overlay hide"></div>
+        <main class="page-body">
+            <div class="row">
+                <div class="col s12 page-title-div">
+                    <h1 class="header">Historial de eventos</h1>
+                    <!--Page breadcrumbs-->
+                    <ol class="breadcrumbs left">
+                        <li><a href="/">Inicio</a></li>
+                        <li><a href="/eventos">Eventos</a></li>
+                        <li><span th:text="${log.id}" th:remove="tag"></span></li>
+                        <li class="active">Detalles</li>
+                    </ol>
+                    <!--End page breadcrumbs-->
+                </div>
+            </div>
+            <section class="section">
+                <div class="row">
+                    <!--start column-->
+                    <div class="col s12">
+                        <!--start card-->
+                        <div class="card card-form">
+                            <div class="card-content">
+                                <span class="card-title form-header">Detalles del evento</span>
+                                <table class="striped table-responsive">
+                                    <thead>
+                                    <tr>
+                                        <th>Secci&oacute;n</th>
+                                        <th>Valor</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    <tr>
+                                        <td><code class=" language-markup">N&uacute;mero de R.U.C.</code></td>
+                                        <td th:text="${log.supplierNumber}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><code class=" language-markup">Establecimiento</code></td>
+                                        <td th:text="${log.establishment}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><code class=" language-markup">Punto de emisi&oacute;n</code></td>
+                                        <td th:text="${log.emissionPoint}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><code class=" language-markup">Secuencial</code></td>
+                                        <td th:text="${log.receiptNumber}"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><code class=" language-markup">Tipo de documento</code></td>
+                                        <td th:text="${log.docTypeName}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><code class=" language-markup">Estatus</code></td>
+                                        <td th:text="${log.status}"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><code class=" language-markup">Respuesta</code></td>
+                                        <td th:text="${log.response}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><code class=" language-markup">Fecha de inserci&oacute;n</code></td>
+                                        <td th:utext="${#temporals.format(log.insertionDate, 'dd/MM/yyyy HH:mm:ss')}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!--end card-->
+                    </div>
+                    <!--end column-->
+                </div>
+            </section>
+        </main>
+        <div th:replace="fragments/footer :: footer"></div>
+    </div>
+</div>
+<div th:replace="fragments/scripts :: scripts"></div>
+</body>
+</html>

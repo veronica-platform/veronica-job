@@ -26,4 +26,9 @@ public class FolderUtils {
         return sb.toString();
     }
 
+    public static boolean isDirectory(String folderPath) {
+        File rootFolder = new File(folderPath);
+        return rootFolder.exists() && rootFolder.isDirectory();
+    }
+
 }

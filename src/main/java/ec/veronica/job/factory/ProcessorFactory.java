@@ -1,6 +1,7 @@
 package ec.veronica.job.factory;
 
-import ec.veronica.common.types.SriStatusType;
+import ec.veronica.job.interfaces.ProcessorService;
+import ec.veronica.job.types.SriStatusType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

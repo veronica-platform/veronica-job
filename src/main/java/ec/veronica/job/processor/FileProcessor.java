@@ -1,16 +1,15 @@
 package ec.veronica.job.processor;
 
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.PathNotFoundException;
-import ec.veronica.common.ReceiptDetails;
-import ec.veronica.common.SriUtils;
-import ec.veronica.common.StringUtils;
-import ec.veronica.common.types.SriStatusType;
-import ec.veronica.job.domain.Log;
+import ec.veronica.job.commons.XmlUtils;
+import ec.veronica.job.domain.AuditLog;
 import ec.veronica.job.factory.ExtractorFactory;
 import ec.veronica.job.factory.ProcessorFactory;
-import ec.veronica.job.http.VeronicaHttpClient;
-import ec.veronica.job.service.LogService;
+import ec.veronica.job.service.AuditLogService;
+import ec.veronica.job.service.VeronicaApiService;
+import ec.veronica.job.types.DocumentType;
+import ec.veronica.job.types.SriStatusType;
+import lombok.Builder;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
@@ -21,13 +20,18 @@ import org.w3c.dom.Document;
 import javax.xml.xpath.XPathExpressionException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
-import static ec.veronica.common.XmlUtils.evalXPath;
-import static ec.veronica.common.types.SriStatusType.STATUS_APPLIED;
-import static ec.veronica.common.types.SriStatusType.STATUS_INTERNAL_ERROR;
-import static ec.veronica.common.types.SriStatusType.STATUS_NOT_APPLIED;
-import static ec.veronica.common.types.SriStatusType.STATUS_PENDING;
+import static ec.veronica.job.commons.Constants.XML_XPATH_COD_DOC;
+import static ec.veronica.job.commons.Constants.XML_XPATH_DOC_NUMBER;
+import static ec.veronica.job.commons.Constants.XML_XPATH_EMISSION_POINT;
+import static ec.veronica.job.commons.Constants.XML_XPATH_ESTABLISHMENT;
+import static ec.veronica.job.commons.Constants.XML_XPATH_SUPPLIER_NUMBER;
+import static ec.veronica.job.commons.StringUtils.getAccessKey;
+import static ec.veronica.job.commons.StringUtils.getSriStatus;
+import static ec.veronica.job.commons.XmlUtils.evalXPath;
+import static ec.veronica.job.types.SriStatusType.STATUS_APPLIED;
+import static ec.veronica.job.types.SriStatusType.STATUS_INTERNAL_ERROR;
+import static ec.veronica.job.types.SriStatusType.STATUS_NOT_APPLIED;
 import static java.lang.String.format;
 
 @Slf4j
@@ -35,110 +39,75 @@ import static java.lang.String.format;
 @RequiredArgsConstructor
 public class FileProcessor implements Processor {
 
-    private final LogService logService;
+    private final AuditLogService auditLogService;
     private final ExtractorFactory extractorFactory;
     private final ProcessorFactory processorFactory;
-    private final VeronicaHttpClient veronicaHttpClient;
+    private final VeronicaApiService veronicaApiService;
 
     @Override
     public void process(Exchange exchange) {
         try {
-            byte[] payload = exchange.getIn().getBody(String.class).getBytes(StandardCharsets.UTF_8);
-            ReceiptDetails receiptDetails = SriUtils.getDetails(new String(payload), "");
-            log.info("Processing receipt for supplier {} and receipt: {}-{}-{}-{}",
-                    receiptDetails.getSupplierNumber(),
-                    receiptDetails.getDocumentType().getShortName(),
-                    receiptDetails.getEstablishment(),
-                    receiptDetails.getEmissionPoint(),
-                    receiptDetails.getDocumentNumber());
-            String responseBody = veronicaHttpClient.postAndApply(payload);
-            SriStatusType sriStatusType = getSriStatus(responseBody);
-            log(responseBody, sriStatusType, receiptDetails);
-            String accessKey = getAccessKey(responseBody, sriStatusType);
-            byte[] pdf = sriStatusType == STATUS_APPLIED ? veronicaHttpClient.getFile(accessKey, "pdf") : null;
-            byte[] xml = sriStatusType == STATUS_APPLIED || sriStatusType == STATUS_NOT_APPLIED ? veronicaHttpClient.getFile(accessKey, "xml") : payload;
-            processorFactory.get(sriStatusType).process(exchange, pdf, xml);
-            exchange.getIn().setHeader("folderName", getCustomerNumber(receiptDetails.getDocument(), receiptDetails));
-            exchange.getIn().setHeader("fileName", getFileName(receiptDetails));
-            log.info("Process completed successfully");
+            log.debug("--> START VERONICA INTEGRATION");
+            String request = exchange.getIn().getBody(String.class);
+            String response = veronicaApiService.postAndApply(request);
+            log.debug(response);
+            SriStatusType status = getSriStatus(response);
+            AuditLog auditLog = logResponse(request, response, status);
+            String accessKey = getAccessKey(response, status);
+            byte[] pdf = status == STATUS_APPLIED ? veronicaApiService.getFile(accessKey, "pdf") : null;
+            byte[] xml = status == STATUS_APPLIED || status == STATUS_NOT_APPLIED ?
+                    veronicaApiService.getFile(accessKey, "xml") :
+                    request.getBytes(StandardCharsets.UTF_8);
+            processorFactory.get(status).process(exchange, pdf, xml);
+            exchange.getIn().setHeader("folderName", auditLog.getCustomerNumber());
+            exchange.getIn().setHeader("fileName", getFileName(auditLog));
+            log.debug("--> END VERONICA INTEGRATION");
         } catch (Exception ex) {
-            log.error("An error has occurred trying to apply the receipt: {}", ex.getMessage());
+            log.error("[process]", ex);
             processorFactory.get(STATUS_INTERNAL_ERROR).process(exchange, null, null);
         }
     }
 
-    /**
-     * @param receiptDetails
-     * @return
-     */
-    private String getFileName(ReceiptDetails receiptDetails) {
+    private String getFileName(AuditLog auditLog) {
         return format("%s-%s-%s-%s",
-                receiptDetails.getDocumentType().getShortName(),
-                receiptDetails.getEstablishment(),
-                receiptDetails.getEmissionPoint(),
-                receiptDetails.getDocumentNumber()
+                DocumentType.getFromCode(auditLog.getDocCode()).get().getShortName(),
+                auditLog.getEstablishment(),
+                auditLog.getEmissionPoint(),
+                auditLog.getReceiptNumber()
         );
     }
 
-    /**
-     * @param document
-     * @param sriEntity
-     * @return
-     * @throws XPathExpressionException
-     */
-    private String getCustomerNumber(Document document, ReceiptDetails sriEntity) throws XPathExpressionException {
-        return evalXPath(document, extractorFactory.get(sriEntity.getDocumentType()).getCustomerNumberXPath()).get();
+    private DocumentType resolveDocumentType(Document dom) throws XPathExpressionException {
+        return DocumentType.getFromCode(evalXPath(dom, XML_XPATH_COD_DOC).orElse("")).orElse(DocumentType.FACTURA);
     }
 
-    /**
-     * @param responseBody
-     * @param sriStatusType
-     * @return
-     */
-    private String getAccessKey(String responseBody, SriStatusType sriStatusType) {
-        return sriStatusType == STATUS_APPLIED ? JsonPath.read(responseBody, "$.result.autorizaciones[0].numeroAutorizacion") :
-                sriStatusType == STATUS_NOT_APPLIED ? JsonPath.read(responseBody, "$.result.claveAccesoConsultada") : "";
-    }
-
-    /**
-     * @param responseBody
-     * @return
-     */
-    private SriStatusType getSriStatus(String responseBody) {
-        if (StringUtils.isEmpty(responseBody)) {
-            return STATUS_INTERNAL_ERROR;
-        }
-        Optional<SriStatusType> status;
-        try {
-            status = SriStatusType.fromValue(JsonPath.read(responseBody, "$.result.autorizaciones[0].estado"));
-        } catch (PathNotFoundException ex1) {
-            try {
-                status = SriStatusType.fromValue(JsonPath.read(responseBody, "$.result.estado"));
-            } catch (PathNotFoundException ex2) {
-                status = Optional.of(STATUS_INTERNAL_ERROR);
-            }
-        }
-        return status.orElse(STATUS_PENDING);
-    }
-
-    /**
-     * @param responseBody
-     * @param status
-     * @param receiptDetails
-     */
-    private void log(String responseBody, SriStatusType status, ReceiptDetails receiptDetails) {
-        Log logEntry = Log
+    private AuditLog logResponse(String request, String responseBody, SriStatusType status) throws Exception {
+        Document dom = XmlUtils.fromStringToDocument(request);
+        DocumentType documentType = resolveDocumentType(dom);
+        AuditLog logEntry = AuditLog
                 .builder()
-                .estab(receiptDetails.getEstablishment())
-                .ptoEmision(receiptDetails.getEmissionPoint())
-                .receiptNumber(receiptDetails.getDocumentNumber())
-                .docType(receiptDetails.getDocumentType().getDescription())
+                .establishment(evalXPath(dom, XML_XPATH_ESTABLISHMENT).orElse(""))
+                .emissionPoint(evalXPath(dom, XML_XPATH_EMISSION_POINT).orElse(""))
+                .receiptNumber(evalXPath(dom, XML_XPATH_DOC_NUMBER).orElse(""))
+                .supplierNumber(evalXPath(dom, XML_XPATH_SUPPLIER_NUMBER).orElse(""))
+                .customerNumber(evalXPath(dom, extractorFactory.get(documentType).getCustomerNumberXPath()).orElse(""))
+                .docCode(documentType.getCode())
+                .docTypeName(documentType.getDescription())
                 .response(responseBody)
                 .status(status.getValue())
-                .supplierNumber(receiptDetails.getSupplierNumber())
                 .insertionDate(LocalDateTime.now())
                 .build();
-        logService.save(logEntry);
+        return auditLogService.save(logEntry);
     }
 
+}
+
+@Data
+@Builder
+class ReceiptDetails {
+    String establishment;
+    String emissionPoint;
+    String documentNumber;
+    DocumentType documentType;
+    String supplierNumber;
 }

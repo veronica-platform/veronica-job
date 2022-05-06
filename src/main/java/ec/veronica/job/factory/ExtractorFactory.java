@@ -1,6 +1,7 @@
 package ec.veronica.job.factory;
 
-import ec.veronica.common.types.DocumentType;
+import ec.veronica.job.interfaces.ExtractorService;
+import ec.veronica.job.types.DocumentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

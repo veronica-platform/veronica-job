@@ -1,13 +1,14 @@
 package ec.veronica.job.config;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.SimpleRegistry;
 import org.apache.camel.spring.SpringCamelContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordAccessTokenProvider;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
@@ -17,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 
 @SuppressWarnings("rawtypes")
 @Configuration
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class BeanConfig {
 
     private final ApplicationContext context;
@@ -28,11 +29,6 @@ public class BeanConfig {
         SimpleRegistry registry = new SimpleRegistry();
         springCamelContext.setRegistry(registry);
         return springCamelContext;
-    }
-
-    @Bean
-    public ResourceOwnerPasswordAccessTokenProvider resourceOwnerPasswordAccessTokenProvider() {
-        return new ResourceOwnerPasswordAccessTokenProvider();
     }
 
     @Bean
@@ -51,6 +47,11 @@ public class BeanConfig {
         templateResolver.setTemplateMode(TemplateMode.HTML);
         templateResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
         return templateResolver;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }

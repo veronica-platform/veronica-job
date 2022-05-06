@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header"></div>
+    <title>Veronica</title>
+    <meta th:name="${_csrf.parameterName}" th:content="${_csrf.token}"/>
+</head>
+<body>
+<div class="page-wrapper">
+    <div id="control-body" class="fixed-sidebar medium-sidebar fixed-nav">
+        <div th:replace="fragments/nav :: nav"></div>
+        <div th:replace="fragments/menu :: menu"></div>
+        <div class="search-overlay hide"></div>
+        <main class="page-body">
+            <div class="row">
+                <div class="col s12 page-title-div">
+                    <h1 class="header">Administraci&oacute;n de procesos</h1>
+                    <!--Page breadcrumbs-->
+                    <ol class="breadcrumbs left">
+                        <li><a href="/">Inicio</a></li>
+                        <li>Procesos</li>
+                    </ol>
+                    <!--End page breadcrumbs-->
+                </div>
+            </div>
+            <section class="section">
+                <div class="row">
+                    <div class="col s12">
+                        <div class="card">
+                            <div class="material-table z-depth-1">
+                                <div class="table-header">
+                                    <span class="table-title">Listado de procesos</span>
+                                    <div class="actions">
+                                        <a href="/procesos/crear"
+                                           class="waves-effect tooltipped btn-flat"
+                                           data-tooltip="Crear proceso"><i class="material-icons">add</i></a>
+                                        <a href="/procesos" class="waves-effect tooltipped btn-flat"
+                                           data-tooltip="Actualizar"><i class="material-icons">autorenew</i></a>
+                                    </div>
+                                </div>
+                                <table id="basic-datatable" class="bordered highlight">
+                                    <thead>
+                                    <tr>
+                                        <th>C.I./R.U.C.</th>
+                                        <th>CARPETA RA&Iacute;Z</th>
+                                        <th>ESTADO</th>
+                                        <th>ACCIONES</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:block th:each="listener : ${listeners}">
+                                        <td th:text="${listener.supplierNumber}"></td>
+                                        <td th:text="${listener.rootFolder}"></td>
+                                        <td>
+                                            <div th:attr="class=${listener.enabled ? 'chip green-light' : 'chip red-light'}">
+                                                <span th:text="${listener.enabled} ? 'EN EJECUCI&Oacute;N' : 'DETENIDO'"
+                                                      th:remove="tag">title</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="col s12 m6 l4">
+                                                <button class='dropdown-button dropdown-widthChange dropdown-belowOrigin btn-floating gray'
+                                                        href='#'
+                                                        th:attr="data-activates='dropdown' + ${listener.id}"><i
+                                                        class="material-icons black-text right">list</i></button>
+                                                <ul th:id="'dropdown' + ${listener.id}" class='dropdown-content'>
+                                                    <li th:if="${!listener.enabled}"><a
+                                                            href="#" th:attr="onclick=|_changeStatus('${listener.id}', true)|"><i
+                                                            class="material-icons gray-text left">play_arrow</i>Iniciar</a>
+                                                    </li>
+                                                    <li th:if="${listener.enabled}"><a
+                                                            href="#" th:attr="onclick=|_changeStatus('${listener.id}', false)|"><i
+                                                            class="material-icons gray-text left">stop</i>Pausar</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#"
+                                                           th:attr="onclick=|deleteListener('${listener.id}')|"><i
+                                                                class="material-icons gray-text left">delete</i>Eliminar</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <div th:replace="fragments/footer :: footer"></div>
+    </div>
+</div>
+<div th:replace="fragments/scripts :: scripts"></div>
+<script th:src="@{/js/http/listeners.js}" type="text/javascript"></script>
+</body>
+</html>
