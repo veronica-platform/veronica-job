@@ -2,7 +2,7 @@
 
 lib-cov
 *.seed
-*.log
+*.auditLog
 *.csv
 *.dat
 *.out
@@ -14,10 +14,10 @@ logs
 results
 tmp
 
-npm-debug.log
+npm-debug.auditLog
 node_modules
 bower_components
 .grunt
 _site
 
-sauce_connect.log
+sauce_connect.auditLog

@@ -11,6 +11,7 @@ public class LicenciaDto implements Serializable {
 
     private UUID id;
     private String numeroRuc;
+    private String razonSocial;
     private String fechaVencimiento;
     private BigDecimal precio;
     private boolean activa;

@@ -8,7 +8,9 @@
                 <li><span class="brand-logo hide-on-med-and-down"
                           style="font-size: 22px !important; font-weight: bold; padding-left: 16px;">VERONICA</span>
                 </li>
-                <li class="hide-on-large-only"><a href="javascript:void(0)" id="toggle-left-sidebar" class="hrz-menu waves-effect waves-default"><i class="material-icons">menu</i></a></li>
+                <li class="hide-on-large-only"><a href="javascript:void(0)" id="toggle-left-sidebar"
+                                                  class="hrz-menu waves-effect waves-default"><i class="material-icons">menu</i></a>
+                </li>
             </ul>
             <ul class="right">
                 <li id="user-account-box"><a href="javascript:void(0)"
@@ -17,7 +19,11 @@
                 </li>
             </ul>
             <ul id='user-account-dropdown' class='dropdown-content'>
-                <li><a href="/logout"><i class="material-icons">power_settings_new</i>Cerrar sesi&oacute;n</a></li>
+                <li><a href="javascript: document.logoutForm.submit()"><i class="material-icons">power_settings_new</i>Cerrar
+                    sesi&oacute;n</a></li>
+                <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+                    <input hidden type="submit" value="Sign Out"/>
+                </form>
             </ul>
         </div>
     </nav>

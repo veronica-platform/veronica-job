@@ -1,5 +1,6 @@
 package ec.veronica.job.commons;
 
+import ec.veronica.job.types.DestinationFolderType;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -13,7 +14,7 @@ public class FolderUtilsTest {
     public void Given_Folder_Subdirectories_Then_BuildPathSuccessfully() {
         String rootFolder = System.getProperty("user.dir");
         String result = FolderUtils.buildFolderPath(
-                asList(rootFolder, DestinationFolder.FOLDER_AUTHORIZED.getValue(), "9999999999999"),
+                asList(rootFolder, DestinationFolderType.FOLDER_AUTHORIZED.getValue(), "9999999999999"),
                 Optional.empty()
         );
         System.out.println(result);
@@ -24,7 +25,7 @@ public class FolderUtilsTest {
     public void Given_Folder_SubdirectoriesWithArguments_Then_BuildPathSuccessfully() {
         String rootFolder = System.getProperty("user.dir");
         String result = FolderUtils.buildFolderPath(
-                asList(rootFolder, DestinationFolder.FOLDER_AUTHORIZED.getValue(), "9999999999999"),
+                asList(rootFolder, DestinationFolderType.FOLDER_AUTHORIZED.getValue(), "9999999999999"),
                 Optional.of("abc=def&ghi=jkl")
         );
         System.out.println(result);

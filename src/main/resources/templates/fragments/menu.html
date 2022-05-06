@@ -15,7 +15,7 @@
                         <tbody>
                         <tr>
                             <td class="center">
-                                <span class="current-plan" th:text="${user.nombres}" th:remove="tag"></span>
+                                <span class="current-plan" th:text="${user.nombres} + ' ' + ${user.apellidos}" th:remove="tag"></span>
                                 <br>
                                 <span class="price" th:text="${user.email}" th:remove="tag"></span>
                             </td>

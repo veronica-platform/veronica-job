@@ -85,7 +85,7 @@ swal({
   closeOnConfirm: false,
   animation: "slide-from-top"
 }, function(inputValue){
-  console.log("You wrote", inputValue);
+  console.auditLog("You wrote", inputValue);
 });
 ```
 
