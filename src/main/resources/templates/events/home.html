@@ -55,7 +55,7 @@
                                     <th:block th:each="log : ${logs}">
                                         <tr>
                                             <td th:utext="${log.supplierNumber}"></td>
-                                            <td th:utext="${log.docType}"></td>
+                                            <td th:utext="${log.docTypeName}"></td>
                                             <td th:if="${log.establishment != null and log.emissionPoint != null}"
                                                 th:utext="${log.establishment + '-' + log.emissionPoint + '-' + log.receiptNumber}"></td>
                                             <td th:if="${log.establishment == null or log.emissionPoint == null}"

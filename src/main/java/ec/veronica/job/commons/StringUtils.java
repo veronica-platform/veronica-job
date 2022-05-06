@@ -7,7 +7,9 @@ import lombok.experimental.UtilityClass;
 
 import java.util.Optional;
 
+import static ec.veronica.job.types.SriStatusType.STATUS_APPLIED;
 import static ec.veronica.job.types.SriStatusType.STATUS_INTERNAL_ERROR;
+import static ec.veronica.job.types.SriStatusType.STATUS_NOT_APPLIED;
 import static ec.veronica.job.types.SriStatusType.STATUS_PENDING;
 
 @UtilityClass
@@ -36,6 +38,11 @@ public class StringUtils {
             }
         }
         return status.orElse(STATUS_PENDING);
+    }
+
+    public static String getAccessKey(String responseBody, SriStatusType sriStatusType) {
+        return sriStatusType == STATUS_APPLIED ? JsonPath.read(responseBody, "$.result.autorizaciones[0].numeroAutorizacion") :
+                sriStatusType == STATUS_NOT_APPLIED ? JsonPath.read(responseBody, "$.result.claveAccesoConsultada") : "";
     }
 
 }

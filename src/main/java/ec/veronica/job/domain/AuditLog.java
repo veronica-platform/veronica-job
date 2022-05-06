@@ -28,6 +28,9 @@ public class AuditLog {
     @Column(name = "supplier_number")
     private String supplierNumber;
 
+    @Column(name = "customer_number")
+    private String customerNumber;
+
     @Column(name = "establishment")
     private String establishment;
 
@@ -37,8 +40,11 @@ public class AuditLog {
     @Column(name = "receipt_number")
     private String receiptNumber;
 
+    @Column(name = "doc_code")
+    private String docCode;
+
     @Column(name = "doc_type")
-    private String docType;
+    private String docTypeName;
 
     @Column(name = "status")
     private String status;

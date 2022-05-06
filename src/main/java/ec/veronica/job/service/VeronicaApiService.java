@@ -8,6 +8,7 @@ import ec.veronica.job.repository.http.HttpClientDefinition;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -61,6 +62,22 @@ public class VeronicaApiService {
                 handleError(response);
             }
             return response.body().getResult();
+        } catch (Exception ex) {
+            log.error("[getUser]", ex);
+            throw new VeronicaException("Ocurrió un error al obtener la información del usuario");
+        }
+    }
+
+    public byte[] getFile(String accessKey, String format) {
+        try {
+            Response<ResponseBody> response = retrofit
+                    .create(HttpClientDefinition.class)
+                    .getFile(apiKey, accessKey, format)
+                    .execute();
+            if (!response.isSuccessful()) {
+                handleError(response);
+            }
+            return response.body().bytes();
         } catch (Exception ex) {
             log.error("[getUser]", ex);
             throw new VeronicaException("Ocurrió un error al obtener la información del usuario");
