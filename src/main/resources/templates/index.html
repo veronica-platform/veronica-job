@@ -65,11 +65,11 @@
                                                         class="material-icons black-text right">list</i></button>
                                                 <ul th:id="'dropdown' + ${listener.id}" class='dropdown-content'>
                                                     <li th:if="${!listener.enabled}"><a
-                                                            th:href="@{/api/routes/{id}/start(id=${listener.id})}"><i
+                                                            href="#" th:attr="onclick=|_changeStatus('${listener.id}', true)|"><i
                                                             class="material-icons gray-text left">play_arrow</i>Iniciar</a>
                                                     </li>
                                                     <li th:if="${listener.enabled}"><a
-                                                            th:href="@{/api/routes/{id}/stop(id=${listener.id})}"><i
+                                                            href="#" th:attr="onclick=|_changeStatus('${listener.id}', false)|"><i
                                                             class="material-icons gray-text left">stop</i>Pausar</a>
                                                     </li>
                                                     <li>

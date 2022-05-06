@@ -5,8 +5,10 @@ import ec.veronica.job.dto.UsuarioResponseDto;
 import ec.veronica.job.dto.VeronicaResponseDto;
 import ec.veronica.job.exceptions.VeronicaException;
 import ec.veronica.job.repository.http.HttpClientDefinition;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import retrofit2.Response;
@@ -16,7 +18,6 @@ import java.io.IOException;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class VeronicaApiService {
 
     @Value("${veronica.oauth.client-credentials}")
@@ -26,6 +27,13 @@ public class VeronicaApiService {
     private String apiKey;
 
     private final Retrofit retrofit;
+
+    private final Retrofit retrofitAsString;
+
+    public VeronicaApiService(@Qualifier("retrofit") Retrofit retrofit, @Qualifier("retrofitAsString") Retrofit retrofitAsString) {
+        this.retrofit = retrofit;
+        this.retrofitAsString = retrofitAsString;
+    }
 
     public TokenDto getToken(String username, String password) {
         try {
@@ -56,6 +64,20 @@ public class VeronicaApiService {
         } catch (Exception ex) {
             log.error("[getUser]", ex);
             throw new VeronicaException("Ocurrió un error al obtener la información del usuario");
+        }
+    }
+
+    public String postAndApply(String xml) {
+        try {
+            RequestBody requestBody = RequestBody.create(MediaType.parse("application/atom+xml"), xml);
+            Response<String> response = retrofitAsString
+                    .create(HttpClientDefinition.class)
+                    .postAndApply(apiKey, requestBody)
+                    .execute();
+            return response.body() != null ? response.body() : response.errorBody().string();
+        } catch (Exception ex) {
+            log.error("[postAndApply]", ex);
+            throw new VeronicaException("Ocurrió un error al enviar el comprobante electrónico");
         }
     }
 

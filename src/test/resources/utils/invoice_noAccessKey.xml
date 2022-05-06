@@ -1,0 +1,75 @@
+<factura id="comprobante" version="1.0.0">
+    <infoTributaria>
+        <ambiente>1</ambiente>
+        <tipoEmision>1</tipoEmision>
+        <razonSocial>VERONICA TESTING</razonSocial>
+        <nombreComercial>VERONICA TESTING</nombreComercial>
+        <ruc>1792106524001</ruc>
+        <codDoc>01</codDoc>
+        <estab>001</estab>
+        <ptoEmi>001</ptoEmi>
+        <secuencial>000372225</secuencial>
+        <dirMatriz>AV. 10 DE AGOSTO N39-155 Y DIGUJA</dirMatriz>
+        <agenteRetencion>1</agenteRetencion>
+    </infoTributaria>
+    <infoFactura>
+        <fechaEmision>25/03/2021</fechaEmision>
+        <dirEstablecimiento>AV. 10 DE AGOSTO N39-155 Y DIGUJA</dirEstablecimiento>
+        <contribuyenteEspecial>364E</contribuyenteEspecial>
+        <obligadoContabilidad>SI</obligadoContabilidad>
+        <tipoIdentificacionComprador>05</tipoIdentificacionComprador>
+        <razonSocialComprador>SRI</razonSocialComprador>
+        <identificacionComprador>1310796964</identificacionComprador>
+        <direccionComprador>LA CAROLINA</direccionComprador>
+        <totalSinImpuestos>12.78</totalSinImpuestos>
+        <totalDescuento>0.82</totalDescuento>
+        <totalConImpuestos>
+            <totalImpuesto>
+                <codigo>2</codigo>
+                <codigoPorcentaje>0</codigoPorcentaje>
+                <baseImponible>12.78</baseImponible>
+                <valor>0.00</valor>
+            </totalImpuesto>
+        </totalConImpuestos>
+        <propina>0.00</propina>
+        <importeTotal>12.78</importeTotal>
+        <moneda>DOLAR</moneda>
+        <pagos>
+            <pago>
+                <formaPago>16</formaPago>
+                <total>12.78</total>
+                <plazo>1</plazo>
+                <unidadTiempo>dias</unidadTiempo>
+            </pago>
+        </pagos>
+    </infoFactura>
+    <detalles>
+        <detalle>
+            <codigoPrincipal>USAB013</codigoPrincipal>
+            <codigoAuxiliar>0</codigoAuxiliar>
+            <descripcion>ECO OBSTETRICO CON PERFIL BIOFISICO</descripcion>
+            <cantidad>1.00</cantidad>
+            <precioUnitario>13.60</precioUnitario>
+            <descuento>0.82</descuento>
+            <precioTotalSinImpuesto>12.78</precioTotalSinImpuesto>
+            <detallesAdicionales>
+                <detAdicional nombre="Marca Chevrolet" valor="Chevrolet"/>
+                <detAdicional nombre="Modelo " valor="2012"/>
+                <detAdicional nombre="Chasis" valor="8LDETA03V20003289"/>
+            </detallesAdicionales>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>0</codigoPorcentaje>
+                    <tarifa>0</tarifa>
+                    <baseImponible>12.78</baseImponible>
+                    <valor>0.00</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+    </detalles>
+    <infoAdicional>
+        <campoAdicional nombre="Telefono">12345678</campoAdicional>
+        <campoAdicional nombre="Email">info@veronica.ec</campoAdicional>
+    </infoAdicional>
+</factura>

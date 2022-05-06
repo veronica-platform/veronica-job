@@ -17,7 +17,6 @@ public class FolderUtilsTest {
                 asList(rootFolder, DestinationFolderType.FOLDER_AUTHORIZED.getValue(), "9999999999999"),
                 Optional.empty()
         );
-        System.out.println(result);
         assertNotNull(result);
     }
 
@@ -28,7 +27,6 @@ public class FolderUtilsTest {
                 asList(rootFolder, DestinationFolderType.FOLDER_AUTHORIZED.getValue(), "9999999999999"),
                 Optional.of("abc=def&ghi=jkl")
         );
-        System.out.println(result);
         assertNotNull(result);
     }
 }

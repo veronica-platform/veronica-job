@@ -3,8 +3,10 @@ package ec.veronica.job.repository.http;
 import ec.veronica.job.dto.TokenDto;
 import ec.veronica.job.dto.UsuarioResponseDto;
 import ec.veronica.job.dto.VeronicaResponseDto;
+import okhttp3.RequestBody;
 import org.springframework.stereotype.Repository;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
@@ -24,6 +26,12 @@ public interface HttpClientDefinition {
     @GET("/api/v1.0/usuarios/me")
     Call<VeronicaResponseDto<UsuarioResponseDto>> getUser(
             @Header("X-API-KEY") String apiKey
+    );
+
+    @POST("/api/v1.0/sri")
+    Call<String> postAndApply(
+            @Header("X-API-KEY") String apiKey,
+            @Body RequestBody requestBody
     );
 
 }

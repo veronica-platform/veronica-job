@@ -13,8 +13,8 @@ public class AuditLogService {
 
     private final AuditLogRepository auditLogRepository;
 
-    public void save(AuditLog auditLog) {
-        auditLogRepository.save(auditLog);
+    public AuditLog save(AuditLog auditLog) {
+        return auditLogRepository.save(auditLog);
     }
 
     public void delete(Long id) {

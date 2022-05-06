@@ -9,12 +9,12 @@ import static ec.veronica.job.commons.Constants.MAX_ACCESS_KEY_LENGTH;
 
 public enum DocumentType {
 
-    FACTURA("01", "factura", "Factura", "FAC"),
-    LIQUIDACION_COMPRAS("03", "liquidacionCompra", "Liquidación de compra", "LQ"),
-    NOTA_CREDITO("04", "notaCredito", "Nota de crédito", "NC"),
-    NOTA_DEBITO("05", "notaDebito", "Nota de débito", "ND"),
-    GUITA_REMISION("06", "guiaRemision", "Guía de remisión", "GR"),
-    COMPROBANTE_RETENCION("07", "comprobanteRetencion", "Comprobante de retención", "CR");
+    FACTURA("01", "factura", "FACTURA", "FAC"),
+    LIQUIDACION_COMPRAS("03", "liquidacionCompra", "LIQUIDACIÓN DE COMPRA", "LQ"),
+    NOTA_CREDITO("04", "notaCredito", "NOTA DE CRÉDITO", "NC"),
+    NOTA_DEBITO("05", "notaDebito", "NOTA DE DÉBITO", "ND"),
+    GUITA_REMISION("06", "guiaRemision", "GUÍA DE REMISIÓN", "GR"),
+    COMPROBANTE_RETENCION("07", "comprobanteRetencion", "COMPROBANTE DE RETENCIÓN", "CR");
 
     private final String code;
     private final String name;

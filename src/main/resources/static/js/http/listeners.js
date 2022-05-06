@@ -26,38 +26,6 @@ function deleteListener(listenerId) {
     );
 }
 
-function handleError(error) {
-    console.log(error)
-    swal({
-            title: "Error",
-            text: error?.responseJSON?.message ?? 'Ocurrió un error interno en la aplicación',
-            type: "error"
-        }
-    )
-}
-
-function redirectToHome() {
-    window.location.href = "/";
-}
-
-function _delete(listenerId) {
-    let token = $("meta[name='_csrf']").attr("content");
-    $.ajax({
-        type: "DELETE",
-        contentType: "application/json",
-        url: `${basePath}/${listenerId}`,
-        headers: {"X-CSRF-TOKEN": token},
-        cache: false,
-        timeout: timeout,
-        success: function (data) {
-            redirectToHome();
-        },
-        error: function (e) {
-            handleError(e)
-        }
-    });
-}
-
 function _create() {
     let token = $("meta[name='_csrf']").attr("content");
     let request = {}
@@ -79,5 +47,58 @@ function _create() {
             handleError(e)
         }
     });
+}
 
+function _delete(listenerId) {
+    let token = $("meta[name='_csrf']").attr("content");
+    $.ajax({
+        type: "DELETE",
+        contentType: "application/json",
+        url: `${basePath}/${listenerId}`,
+        headers: {"X-CSRF-TOKEN": token},
+        cache: false,
+        timeout: timeout,
+        success: function (data) {
+            redirectToHome();
+        },
+        error: function (e) {
+            handleError(e)
+        }
+    });
+}
+
+function _changeStatus(listenerId, newStatus) {
+    let token = $("meta[name='_csrf']").attr("content");
+    let request = {}
+    request["enabled"] = newStatus;
+    $.ajax({
+        type: "PATCH",
+        contentType: "application/json",
+        url: `${basePath}/${listenerId}/change-status`,
+        headers: {"X-CSRF-TOKEN": token},
+        data: JSON.stringify(request),
+        dataType: 'json',
+        cache: false,
+        timeout: timeout,
+        success: function (data) {
+            redirectToHome();
+        },
+        error: function (e) {
+            handleError(e)
+        }
+    });
+}
+
+function handleError(error) {
+    console.log(error)
+    swal({
+            title: "Error",
+            text: error?.responseJSON?.message ?? 'Ocurrió un error interno en la aplicación',
+            type: "error"
+        }
+    )
+}
+
+function redirectToHome() {
+    window.location.href = "/";
 }

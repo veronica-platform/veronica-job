@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header"></div>
+    <title>Veronica</title>
+</head>
+<body>
+<div class="page-wrapper">
+    <div id="control-body" class="fixed-sidebar medium-sidebar fixed-nav">
+        <div th:replace="fragments/nav :: nav"></div>
+        <div th:replace="fragments/menu :: menu"></div>
+        <div class="search-overlay hide"></div>
+        <main class="page-body">
+            <div class="row">
+                <div class="col s12 page-title-div">
+                    <h1 class="header">Historial de eventos</h1>
+                    <!--Page breadcrumbs-->
+                    <ol class="breadcrumbs left">
+                        <li><a href="/">Inicio</a></li>
+                        <li>Eventos</li>
+                    </ol>
+                    <!--End page breadcrumbs-->
+                </div>
+            </div>
+            <section class="section">
+                <div class="row">
+                    <div class="col s12">
+                        <div class="card">
+                            <div class="material-table z-depth-1">
+                                <div class="table-header">
+                                    <span class="table-title">Listado de eventos</span>
+                                    <div class="actions">
+                                        <a href="#"
+                                           th:attr="onclick=|deleteAllRoutes()|"
+                                           class="search-toggle waves-effect tooltipped btn-flat"
+                                           data-tooltip="Eliminar todos los eventos"><i
+                                                class="material-icons">delete</i></a>
+                                        <a href="/eventos"
+                                           class="search-toggle waves-effect tooltipped btn-flat"
+                                           data-tooltip="Actualizar"><i class="material-icons">autorenew</i></a>
+                                    </div>
+                                </div>
+                                <table id="export-button-datatable" class="bordered highlight">
+                                    <thead>
+                                    <tr>
+                                        <th>C.I./R.U.C.</th>
+                                        <th>TIPO DE DOCUMENTO</th>
+                                        <th>COMPROBANTE</th>
+                                        <th>ESTATUS</th>
+                                        <th>FECHA DE INSERCI&Oacute;N</th>
+                                        <th>ACCIONES</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <th:block th:each="log : ${logs}">
+                                        <tr>
+                                            <td th:utext="${log.supplierNumber}"></td>
+                                            <td th:utext="${log.docType}"></td>
+                                            <td th:if="${log.establishment != null and log.emissionPoint != null}"
+                                                th:utext="${log.establishment + '-' + log.emissionPoint + '-' + log.receiptNumber}"></td>
+                                            <td th:if="${log.establishment == null or log.emissionPoint == null}"
+                                                th:utext="${log.receiptNumber}"></td>
+                                            <td th:if="${log.status == 'PENDIENTE'}"><span class="chip blue-light"
+                                                                                           th:text="CREADO"></span>
+                                            </td>
+                                            <td th:if="${log.status == 'DEVUELTA'}"><span class="chip red-light"
+                                                                                          th:text="RECHAZADO"></span>
+                                            </td>
+                                            <td th:if="${log.status == 'CON ERRORES'}"><span class="chip red-light"
+                                                                                             th:text="${log.status}"></span>
+                                            </td>
+                                            <td th:if="${log.status == 'AUTORIZADO'}"><span class="chip green-light"
+                                                                                            th:text="${log.status}"></span>
+                                            </td>
+                                            <td th:if="${log.status == 'NO AUTORIZADO'}"><span class="chip red-light"
+                                                                                               th:text="RECHAZADO"></span>
+                                            </td>
+                                            <td th:utext="${#temporals.format(log.insertionDate, 'dd/MM/yyyy HH:mm:ss')}"></td>
+                                            <td>
+                                                <div class="col s12 m6 l4">
+                                                    <button class='dropdown-button dropdown-widthChange dropdown-belowOrigin btn-floating gray'
+                                                            href='#'
+                                                            th:attr="data-activates='dropdown' + ${log.id}"><i
+                                                            class="material-icons black-text right">list</i></button>
+                                                    <ul th:id="'dropdown' + ${log.id}" class='dropdown-content'>
+                                                        <li th:if="${log.status != 'AUTORIZADO'}">
+                                                            <a th:href="@{/eventos/{id}/detalles(id=${log.id})}"><i
+                                                                    class="material-icons gray-text left">remove_red_eye</i>Ver
+                                                                detalles</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#"
+                                                               th:attr="onclick=|deleteEntry('${log.id}')|"><i
+                                                                    class="material-icons gray-text left">delete</i>Eliminar</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </th:block>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <div th:replace="fragments/footer :: footer"></div>
+    </div>
+</div>
+<div th:replace="fragments/scripts :: scripts"></div>
+<div id="view-details" class="modal small">
+    <form class="col s12">
+        <div class="modal-content">
+            <h5 id="responseTitle"></h5>
+            <h6 id="responseBody"></h6>
+        </div>
+        <div class="modal-footer">
+            <a href="#!"
+               class="modal-action modal-close waves-effect waves-red btn-flat red white-text">Cerrar</a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

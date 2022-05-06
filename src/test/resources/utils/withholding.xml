@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<comprobanteRetencion id="comprobante" version="1.0.0">
+    <infoTributaria>
+        <ambiente>2</ambiente>
+        <tipoEmision>1</tipoEmision>
+        <razonSocial>VERONICA TESTING</razonSocial>
+        <nombreComercial>VERONICA TESTING</nombreComercial>
+        <ruc>1792647894001</ruc>
+        <claveAcceso>1004202107179264789400120011000000018060000018012</claveAcceso>
+        <codDoc>07</codDoc>
+        <estab>001</estab>
+        <ptoEmi>100</ptoEmi>
+        <secuencial>000001806</secuencial>
+        <dirMatriz>PICHINCHA - RUMINAHUI - SANGOLQUI - CALLE GUAYAS 8 Y CALLE NAPO</dirMatriz>
+        <agenteRetencion>1</agenteRetencion>
+    </infoTributaria>
+    <infoCompRetencion>
+        <fechaEmision>10/04/2021</fechaEmision>
+        <dirEstablecimiento>PICHINCHA - RUMINAHUI - SANGOLQUI - CALLE GUAYAS 8 Y CALLE NAPO</dirEstablecimiento>
+        <contribuyenteEspecial>000</contribuyenteEspecial>
+        <obligadoContabilidad>SI</obligadoContabilidad>
+        <tipoIdentificacionSujetoRetenido>04</tipoIdentificacionSujetoRetenido>
+        <razonSocialSujetoRetenido>SRI</razonSocialSujetoRetenido>
+        <identificacionSujetoRetenido>1726731521001</identificacionSujetoRetenido>
+        <periodoFiscal>04/2021</periodoFiscal>
+    </infoCompRetencion>
+    <impuestos>
+        <impuesto>
+            <codigo>2</codigo>
+            <codigoRetencion>2</codigoRetencion>
+            <baseImponible>10.80</baseImponible>
+            <porcentajeRetener>70.00</porcentajeRetener>
+            <valorRetenido>7.56</valorRetenido>
+            <codDocSustento>01</codDocSustento>
+            <numDocSustento>001001000000486</numDocSustento>
+            <fechaEmisionDocSustento>10/04/2021</fechaEmisionDocSustento>
+        </impuesto>
+        <impuesto>
+            <codigo>1</codigo>
+            <codigoRetencion>351</codigoRetencion>
+            <baseImponible>90.00</baseImponible>
+            <porcentajeRetener>1.75</porcentajeRetener>
+            <valorRetenido>1.58</valorRetenido>
+            <codDocSustento>01</codDocSustento>
+            <numDocSustento>001001000000486</numDocSustento>
+            <fechaEmisionDocSustento>10/04/2021</fechaEmisionDocSustento>
+        </impuesto>
+    </impuestos>
+    <infoAdicional>
+        <campoAdicional nombre="Telefono">3821363</campoAdicional>
+        <campoAdicional nombre="Email">info@veronica.ec</campoAdicional>
+    </infoAdicional>
+</comprobanteRetencion>
