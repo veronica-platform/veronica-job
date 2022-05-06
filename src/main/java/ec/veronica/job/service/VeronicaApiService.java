@@ -1,9 +1,9 @@
 package ec.veronica.job.service;
 
 import ec.veronica.job.dto.TokenDto;
-import ec.veronica.job.dto.UsuarioDto;
 import ec.veronica.job.dto.UsuarioResponseDto;
 import ec.veronica.job.dto.VeronicaResponseDto;
+import ec.veronica.job.exceptions.VeronicaException;
 import ec.veronica.job.repository.http.HttpClientDefinition;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,6 @@ public class VeronicaApiService {
     private final Retrofit retrofit;
 
     public TokenDto getToken(String username, String password) {
-        TokenDto token = null;
         try {
             Response<TokenDto> response = retrofit
                     .create(HttpClientDefinition.class)
@@ -37,16 +36,14 @@ public class VeronicaApiService {
             if (!response.isSuccessful()) {
                 handleError(response);
             }
-            token = response.body();
+            return response.body();
         } catch (Exception ex) {
-            log.error("getToken", ex);
-        } finally {
-            return token;
+            log.error("[getToken]", ex);
+            throw new VeronicaException("Ocurrió un error un token de acceso válido");
         }
     }
 
     public UsuarioResponseDto getUser() {
-        UsuarioResponseDto user = null;
         try {
             Response<VeronicaResponseDto<UsuarioResponseDto>> response = retrofit
                     .create(HttpClientDefinition.class)
@@ -55,11 +52,10 @@ public class VeronicaApiService {
             if (!response.isSuccessful()) {
                 handleError(response);
             }
-            user = response.body().getResult();
+            return response.body().getResult();
         } catch (Exception ex) {
-            log.error("getToken", ex);
-        } finally {
-            return user;
+            log.error("[getUser]", ex);
+            throw new VeronicaException("Ocurrió un error al obtener la información del usuario");
         }
     }
 
