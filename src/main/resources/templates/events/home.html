@@ -3,6 +3,7 @@
 <head>
     <div th:replace="fragments/header :: header"></div>
     <title>Veronica</title>
+    <meta th:name="${_csrf.parameterName}" th:content="${_csrf.token}"/>
 </head>
 <body>
 <div class="page-wrapper">
@@ -31,7 +32,7 @@
                                     <span class="table-title">Listado de eventos</span>
                                     <div class="actions">
                                         <a href="#"
-                                           th:attr="onclick=|deleteAllRoutes()|"
+                                           th:attr="onclick=|_deleteAll()|"
                                            class="search-toggle waves-effect tooltipped btn-flat"
                                            data-tooltip="Eliminar todos los eventos"><i
                                                 class="material-icons">delete</i></a>
@@ -90,7 +91,7 @@
                                                         </li>
                                                         <li>
                                                             <a href="#"
-                                                               th:attr="onclick=|deleteEntry('${log.id}')|"><i
+                                                               th:attr="onclick=|deleteEvent('${log.id}')|"><i
                                                                     class="material-icons gray-text left">delete</i>Eliminar</a>
                                                         </li>
                                                     </ul>
@@ -122,6 +123,6 @@
         </div>
     </form>
 </div>
-
+<script th:src="@{/js/http/audit_logs.js}" type="text/javascript"></script>
 </body>
 </html>
