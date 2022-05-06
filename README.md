@@ -8,12 +8,19 @@ Cotenidos
 ## Software requerido
 - JDK 1.8.0_121
 
+## Stack de desarrollo
+- H2
+- Spring Boot
+- Apache Camel
+- Thymeleaf
+- HTML/Bootstrap/JQuery
+
 ## Pasos previos
 Crear las siguientes variables de entorno en la computadora donde se desplegará la aplicación, utilizando los valores que se le proporcionará al momento de solicitar sus credenciales de acceso a [info@veronica.ec](mailto:info@veronica.ec):
 ```bash
 VERONICA_BASE_URL="https://api-sbox.veronica.ec/api/v1.0/%s" #Ejemplo para ambiente de Sandbox
-VERONICA_OAUTH_CLIENT_ID=""
-VERONICA_OAUTH_CLIENT_SECRET=""
+VERONICA_OAUTH_CLIENT_CREDENTIALS=""
+VERONICA_API_KEY=""
 ```
 La variable `VERONICA_BASE_URL` puede tomar cualquiera de los siguientes valores, dependiendo del ambiente al que queremos conectarnos:
 
@@ -31,12 +38,12 @@ java -jar veronica-job-1.0.0-SNAPSHOT.jar
 
 - Para acceder a la aplicación
 ```bash
-http://localhost:8080/
+http://localhost:5000/
 ```
 
 - Para acceder a la base de datos de la aplicación a través de su consola Web, utilizar el siguiente enlace:
 ```bash
-http://localhost:8080/h2-console
+http://localhost:5000/h2-console
 ```
 
 - Ejemplos de rutas
