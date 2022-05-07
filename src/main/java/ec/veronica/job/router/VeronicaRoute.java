@@ -50,10 +50,8 @@ public class VeronicaRoute extends RouteBuilder {
                     .setBody(simple("${header.appliedInvoice}"))
                     .toD(buildFolderPath(asList(rootFolder, FOLDER_UNAUTHORIZED.getValue()), xmlFileName))
                 .when().simple(is(STATUS_APPLIED.getValue()))
-                    .setBody(simple("${header.appliedInvoice}"))
-                    .toD(buildFolderPath(asList(rootFolder, FOLDER_AUTHORIZED.getValue(), "${header.folderName}"), xmlFileName))
-                .setBody(simple("${header.ride}"))
-                .toD(buildFolderPath(asList(rootFolder, FOLDER_AUTHORIZED.getValue(), "${header.folderName}"), pdfFileName))
+                    .setBody(simple("${header.appliedInvoice}")).toD(buildFolderPath(asList(rootFolder, FOLDER_AUTHORIZED.getValue(), "${header.folderName}"), xmlFileName))
+                    .setBody(simple("${header.ride}")).toD(buildFolderPath(asList(rootFolder, FOLDER_AUTHORIZED.getValue(), "${header.folderName}"), pdfFileName))
         ;
     }
 

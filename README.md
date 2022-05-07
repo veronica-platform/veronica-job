@@ -10,10 +10,13 @@ Cotenidos
 
 ## Stack de desarrollo
 - H2
+- Apache Camel & Content-Based router EIP
 - Spring Boot
-- Apache Camel
 - Thymeleaf
 - HTML/Bootstrap/JQuery
+
+## Diagrama EIP
+![alt text](https://github.com/veronica-platform/veronica-job/blob/static/img/eip-diagram.png)
 
 ## Pasos previos
 Crear las siguientes variables de entorno en la computadora donde se desplegará la aplicación, utilizando los valores que se le proporcionará al momento de solicitar sus credenciales de acceso a [info@veronica.ec](mailto:info@veronica.ec):
