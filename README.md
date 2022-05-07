@@ -5,6 +5,9 @@ Cotenidos
     - [Pasos previos](#pasos-previos)
     - [Ejecución](#ejecución)
 
+## Diagrama EIP
+![alt text](https://github.com/veronica-platform/veronica-job/blob/main/static/eip-diagram.png)
+
 ## Software requerido
 - JDK 1.8.0_121
 
@@ -14,9 +17,6 @@ Cotenidos
 - Spring Boot
 - Thymeleaf
 - HTML/Bootstrap/JQuery
-
-## Diagrama EIP
-![alt text](https://github.com/veronica-platform/veronica-job/blob/main/static/eip-diagram.png)
 
 ## Pasos previos
 Crear las siguientes variables de entorno en la computadora donde se desplegará la aplicación, utilizando los valores que se le proporcionará al momento de solicitar sus credenciales de acceso a [info@veronica.ec](mailto:info@veronica.ec):
