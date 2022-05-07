@@ -7,7 +7,7 @@ Cotenidos
     - [Ejecución](#ejecución)
 
 ## Diagrama EIP
-![alt text](https://github.com/veronica-platform/veronica-job/blob/main/static/eip-diagram.png)
+![alt text](https://github.com/veronica-platform/veronica-job/blob/main/static/eip-content-based-route.png)
 
 ## Software requerido
 - JDK 1.8.0_121
