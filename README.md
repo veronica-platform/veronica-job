@@ -14,7 +14,7 @@ Cotenidos
 
 ## Stack de desarrollo
 - H2
-- Apache Camel & Content-Based router EIP
+- Apache Camel & Content-Based Router EIP
 - Spring Boot
 - Thymeleaf
 - HTML/Bootstrap/JQuery
