@@ -51,7 +51,7 @@ http://localhost:5000/
 ![alt text](https://github.com/veronica-platform/veronica-job/blob/main/static/login-screen.png)
 
 3. Visualizará la lista de procesos que actualmente tiene en ejecución.
-![alt text](https://github.com/veronica-platform/veronica-job/blob/main/static/login-screen.png)
+![alt text](https://github.com/veronica-platform/veronica-job/blob/main/static/processes-list.png)
 
 4. Para agregar un nuevo proceso, haga clic en el botón más de la parte superior derecha, seleccione la empresa y la ruta donde serán almacenados los comprobantes a sincronizar con Verónica.
 ![alt text](https://github.com/veronica-platform/veronica-job/blob/main/static/new-process.png)
