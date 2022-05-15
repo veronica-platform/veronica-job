@@ -40,17 +40,27 @@ La variable `VERONICA_BASE_URL` puede tomar cualquiera de los siguientes valores
 java -jar veronica-job-1.0.0-SNAPSHOT.jar
 ```
 
-- Para acceder a la aplicación
+## Uso
+
+1. Ir a la siguiente dirección en un navegador Web: 
 ```bash
 http://localhost:5000/
 ```
 
-- Para acceder a la base de datos de la aplicación a través de su consola Web, utilizar el siguiente enlace:
-```bash
-http://localhost:5000/h2-console
-```
+2. Ingresar sus credenciales de Verónica (usuario/password)
+![alt text](https://github.com/veronica-platform/veronica-job/blob/main/static/login-screen.png)
 
+3. Visualizará la lista de procesos que actualmente tiene en ejecución.
+![alt text](https://github.com/veronica-platform/veronica-job/blob/main/static/login-screen.png)
+
+4. Para agregar un nuevo proceso, haga clic en el botón más de la parte superior derecha, seleccione la empresa y la ruta donde serán almacenados los comprobantes a sincronizar con Verónica.
+![alt text](https://github.com/veronica-platform/veronica-job/blob/main/static/new-process.png)
+   
 - Ejemplos de rutas
 ```bash
 C:\\ROOT\\XML\\
 ```
+
+5. Para visualizar los eventos, diríjase a la vista de logs.
+![alt text](https://github.com/veronica-platform/veronica-job/blob/main/static/audit-logs-list.png)
+ 
