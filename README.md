@@ -56,7 +56,7 @@ http://localhost:5000/
 4. Para agregar un nuevo proceso, haga clic en el botón más de la parte superior derecha de la vista anterior y será redirigido a la siguiente vista donde deberá seleccionar la empresa y la ruta donde serán almacenados los comprobantes a sincronizar con Verónica.
 ![alt text](https://github.com/veronica-platform/veronica-job/blob/main/static/new-process.png)
    
-- Ejemplos de rutas
+- Ejemplo de carpeta raíz
 ```bash
 C:\\ROOT\\XML\\
 ```
