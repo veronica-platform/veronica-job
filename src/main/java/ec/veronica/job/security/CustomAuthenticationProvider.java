@@ -24,7 +24,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        log.debug("Login with credentials: {} and {}", authentication.getName(), authentication.getCredentials());
         String username = authentication.getName();
         TokenDto tokenDto = veronicaApiService.getToken(username, authentication.getCredentials().toString());
         if (tokenDto == null) {
