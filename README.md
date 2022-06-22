@@ -34,6 +34,7 @@ La variable `VERONICA_BASE_URL` puede tomar cualquiera de los siguientes valores
 | Producción | https://api.veronica.ec/api/v1.0/%s      |
 
 ## Ejecución
+- Descarga la aplicación compilada desde [este link](https://veronica-platform.s3.sa-east-1.amazonaws.com/veronica-job-1.0.0-SNAPSHOT.jar).
 - Para desplegar la aplicación, ejecutar el siguiente comando en la carpeta donde se encuentre el archivo jar:
 ```bash
 java -jar veronica-job-1.0.0-SNAPSHOT.jar
