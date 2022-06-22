@@ -1,12 +1,12 @@
 package ec.veronica.job.service;
 
-import ec.veronica.job.domain.Listener;
 import ec.veronica.job.dto.ChangeListenerStatusDto;
 import ec.veronica.job.dto.CreateListenerDto;
 import ec.veronica.job.dto.ListenerDto;
 import ec.veronica.job.exceptions.VeronicaException;
 import ec.veronica.job.processor.FileProcessor;
 import ec.veronica.job.repository.sql.ListenerRepository;
+import ec.veronica.job.repository.sql.entity.Listener;
 import ec.veronica.job.router.VeronicaRoute;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

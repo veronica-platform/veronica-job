@@ -1,9 +1,9 @@
 package ec.veronica.job.processor;
 
 import ec.veronica.job.commons.XmlUtils;
-import ec.veronica.job.domain.AuditLog;
 import ec.veronica.job.factory.ExtractorFactory;
 import ec.veronica.job.factory.ProcessorFactory;
+import ec.veronica.job.repository.sql.entity.AuditLog;
 import ec.veronica.job.service.AuditLogService;
 import ec.veronica.job.service.VeronicaApiService;
 import ec.veronica.job.types.DocumentType;

@@ -1,7 +1,7 @@
 package ec.veronica.job.service;
 
-import ec.veronica.job.domain.AuditLog;
 import ec.veronica.job.repository.sql.AuditLogRepository;
+import ec.veronica.job.repository.sql.entity.AuditLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

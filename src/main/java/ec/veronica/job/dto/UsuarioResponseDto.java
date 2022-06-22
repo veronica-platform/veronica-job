@@ -9,6 +9,6 @@ import java.util.List;
 public class UsuarioResponseDto implements Serializable {
 
     private UsuarioDto usuario;
-    private List<LicenciaDto> licencias;
+    //private List<LicenciaDto> licencias;
 
 }

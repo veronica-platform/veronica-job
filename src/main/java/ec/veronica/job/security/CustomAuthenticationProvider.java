@@ -1,6 +1,7 @@
 package ec.veronica.job.security;
 
 import ec.veronica.job.dto.TokenDto;
+import ec.veronica.job.service.SupplierService;
 import ec.veronica.job.service.VeronicaApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
+    private final SupplierService supplierService;
     private final VeronicaApiService veronicaApiService;
 
     @Override
@@ -28,7 +30,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         if (tokenDto == null) {
             throw new BadCredentialsException(username);
         }
-        return new UsernamePasswordAuthenticationToken(veronicaApiService.getUser(), null, Collections.emptyList());
+        supplierService.saveAll(veronicaApiService.findAllSuppliers(tokenDto.getAccess_token()));
+        return new UsernamePasswordAuthenticationToken(veronicaApiService.getUser(tokenDto.getAccess_token()), null, Collections.emptyList());
     }
 
     @Override

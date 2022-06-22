@@ -1,5 +1,6 @@
 package ec.veronica.job.repository.http;
 
+import ec.veronica.job.dto.SupplierDto;
 import ec.veronica.job.dto.TokenDto;
 import ec.veronica.job.dto.UsuarioResponseDto;
 import ec.veronica.job.dto.VeronicaResponseDto;
@@ -14,6 +15,8 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
+import java.util.List;
+
 @Repository
 public interface HttpClientDefinition {
 
@@ -23,11 +26,6 @@ public interface HttpClientDefinition {
             @Query("password") String password,
             @Query("grant_type") String grant_type,
             @Header("Authorization") String basicToken
-    );
-
-    @GET("/api/v1.0/usuarios/me")
-    Call<VeronicaResponseDto<UsuarioResponseDto>> getUser(
-            @Header("X-API-KEY") String apiKey
     );
 
     @GET("/api/v1.0/comprobantes/{accessKey}/archivos")
@@ -41,6 +39,16 @@ public interface HttpClientDefinition {
     Call<String> postAndApply(
             @Header("X-API-KEY") String apiKey,
             @Body RequestBody requestBody
+    );
+
+    @GET("/api/v1.0/usuarios/me")
+    Call<VeronicaResponseDto<UsuarioResponseDto>> getUser(
+            @Header("Authorization") String bearerToken
+    );
+
+    @GET("/api/v1.0/empresas/ids")
+    Call<VeronicaResponseDto<List<SupplierDto>>> findAllSuppliers(
+            @Header("Authorization") String bearerToken
     );
 
 }

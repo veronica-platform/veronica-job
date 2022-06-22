@@ -1,7 +1,7 @@
 package ec.veronica.job.config;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,19 +15,20 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
+@RequiredArgsConstructor
 public class RetrofitConfig {
 
     @Value("${veronica.base-url}")
     private String veronicaBaseUrl;
 
+    private final ObjectMapper objectMapper;
+
     @Bean
     @Qualifier("retrofit")
     public Retrofit retrofit() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return new Retrofit.Builder()
                 .baseUrl(veronicaBaseUrl)
-                .addConverterFactory(JacksonConverterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create(objectMapper))
                 .client(okHttpClient())
                 .build();
     }

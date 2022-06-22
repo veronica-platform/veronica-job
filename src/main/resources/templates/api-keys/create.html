@@ -14,12 +14,12 @@
         <main class="page-body">
             <div class="row">
                 <div class="col s12 page-title-div">
-                    <h1 class="header">Administraci&oacute;n de procesos</h1>
+                    <h1 class="header">API Keys</h1>
                     <!--Page breadcrumbs-->
                     <ol class="breadcrumbs left">
                         <li><a href="/">Inicio</a></li>
-                        <li><a href="/procesos">Procesos</a></li>
-                        <li class="active">Crear</li>
+                        <li><a href="/api-keys">API Keys</a></li>
+                        <li class="active">Registrar</li>
                     </ol>
                     <!--End page breadcrumbs-->
                 </div>
@@ -31,25 +31,16 @@
                         <!--start card-->
                         <div class="card card-form">
                             <div class="card-content">
-                                <span class="card-title form-header">Crear proceso</span>
+                                <span class="card-title form-header">Registrar API Key</span>
                                 <form id="create-form">
                                     <div class="row">
                                         <div class="input-field col s12">
-                                            <select id="supplierNumber" name="supplierNumber">
-                                                <option th:each="supplier : ${suppliers}"
-                                                        th:text="${supplier.supplierNumber} + ' - ' + ${supplier.supplierName}"
-                                                        th:value="${supplier.supplierNumber}">
-                                                </option>
-                                            </select>
-                                            <label>Empresa</label>
-                                        </div>
-                                        <div class="input-field col s12">
-                                            <input id="rootFolder" name="rootFolder" type="text">
-                                            <label for="rootFolder">Carpeta ra&iacute;z</label>
+                                            <input id="value" name="value" type="text">
+                                            <label for="value">Valor</label>
                                         </div>
                                         <div class="col s12">
                                             <button class="btn waves-effect waves-light right theme-bg" type="submit"
-                                                    name="action">Crear <i
+                                                    name="action">Registrar <i
                                                     class="material-icons right">save</i>
                                             </button>
                                         </div>
@@ -67,6 +58,6 @@
     </div>
 </div>
 <div th:replace="fragments/scripts :: scripts"></div>
-<script th:src="@{/js/http/listeners.js}" type="text/javascript"></script>
+<script th:src="@{/js/http/api_keys.js}" type="text/javascript"></script>
 </body>
 </html>

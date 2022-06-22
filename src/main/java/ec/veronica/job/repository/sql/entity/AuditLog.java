@@ -1,4 +1,4 @@
-package ec.veronica.job.domain;
+package ec.veronica.job.repository.sql.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

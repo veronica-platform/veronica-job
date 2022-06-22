@@ -24,7 +24,6 @@ Crear las siguientes variables de entorno en la computadora donde se desplegará
 ```bash
 VERONICA_BASE_URL="https://api-sbox.veronica.ec/api/v1.0/%s" #Ejemplo para ambiente de Sandbox
 VERONICA_OAUTH_CLIENT_CREDENTIALS=""
-VERONICA_API_KEY=""
 ```
 La variable `VERONICA_BASE_URL` puede tomar cualquiera de los siguientes valores, dependiendo del ambiente al que queremos conectarnos:
 

@@ -1,6 +1,6 @@
 package ec.veronica.job.repository.sql;
 
-import ec.veronica.job.domain.Listener;
+import ec.veronica.job.repository.sql.entity.Listener;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
