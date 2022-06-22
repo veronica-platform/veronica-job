@@ -22,16 +22,8 @@ Cotenidos
 ## Pasos previos
 Crear las siguientes variables de entorno en la computadora donde se desplegará la aplicación, utilizando los valores que se le proporcionará al momento de solicitar sus credenciales de acceso a [info@veronica.ec](mailto:info@veronica.ec):
 ```bash
-VERONICA_BASE_URL="https://api-sbox.veronica.ec/" #Ejemplo para ambiente de Sandbox
 VERONICA_OAUTH_CLIENT_CREDENTIALS=""
 ```
-La variable `VERONICA_BASE_URL` puede tomar cualquiera de los siguientes valores, dependiendo del ambiente al que queremos conectarnos:
-
-| Ambiente   | URL                                      |
-|------------|------------------------------------------|
-| Desarrollo | https://api-dev.veronica.ec/  |
-| Sandbox    | https://api-sbox.veronica.ec/ |
-| Producción | https://api.veronica.ec/      |
 
 ## Ejecución
 - Descarga la aplicación compilada desde [este link](https://veronica-platform.s3.sa-east-1.amazonaws.com/veronica-job-1.0.0-SNAPSHOT.jar).
