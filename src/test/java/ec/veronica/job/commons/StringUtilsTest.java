@@ -3,8 +3,6 @@ package ec.veronica.job.commons;
 import org.junit.Test;
 
 import static ec.veronica.job.types.SriStatusType.STATUS_APPLIED;
-import static ec.veronica.job.types.SriStatusType.STATUS_NOT_APPLIED;
-import static ec.veronica.job.types.SriStatusType.STATUS_REJECTED;
 import static org.junit.Assert.assertEquals;
 
 public class StringUtilsTest {
