@@ -29,20 +29,16 @@ public class StringUtils {
         }
         Optional<SriStatusType> status;
         try {
-            status = SriStatusType.fromValue(JsonPath.read(responseBody, "$.result.autorizaciones[0].estado"));
+            status = SriStatusType.fromValue(JsonPath.read(responseBody, "$.estado"));
         } catch (PathNotFoundException ex1) {
-            try {
-                status = SriStatusType.fromValue(JsonPath.read(responseBody, "$.result.estado"));
-            } catch (PathNotFoundException ex2) {
-                status = Optional.of(STATUS_INTERNAL_ERROR);
-            }
+            status = Optional.of(STATUS_INTERNAL_ERROR);
         }
         return status.orElse(STATUS_PENDING);
     }
 
     public static String getAccessKey(String responseBody, SriStatusType sriStatusType) {
-        return sriStatusType == STATUS_APPLIED ? JsonPath.read(responseBody, "$.result.autorizaciones[0].numeroAutorizacion") :
-                sriStatusType == STATUS_NOT_APPLIED ? JsonPath.read(responseBody, "$.result.claveAccesoConsultada") : "";
+        return (sriStatusType == STATUS_APPLIED || sriStatusType == STATUS_NOT_APPLIED)
+                ? JsonPath.read(responseBody, "$.claveAcceso") : "";
     }
 
 }

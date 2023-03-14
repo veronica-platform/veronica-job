@@ -14,7 +14,6 @@ public class LoginController {
 
     @RequestMapping("/login")
     public String login() {
-        log.debug("Login");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             return "login";
